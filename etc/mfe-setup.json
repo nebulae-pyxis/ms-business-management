@@ -1,0 +1,37 @@
+[
+    {
+        "name": "business-management",
+        "src": "frontend/emi/business-management",
+        "groups": [
+            {
+              "id": "Business",
+              "icon": "business",
+              "translate": {
+                "en": "Business",
+                "es": "Negocios"
+              },
+              "priority": 1000
+            }
+          ],
+        "contents": [
+            {
+                "groupId": "Business",
+                "id": "business-management",
+                "icon": "business",
+                "translate": {
+                    "en": "Business manmagement",
+                    "es": "Administración de negocios"
+                },
+                "navURL": "/business-management",
+                "path": "business-management",
+                "loadChildren": "./main/content/business-management/business-management.module#BusinessManagementModule",
+                "priority": 1000,
+                "roles" : ["developer","business-manager"],
+                "default" : false
+            }            
+        ],
+        "preBuildCommands": ["npm i angular4-material-table@0.2.0"],
+        "environmentVars": {
+        }
+    }
+]

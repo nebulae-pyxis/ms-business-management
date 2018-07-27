@@ -1,0 +1,91 @@
+<fuse-widget fxLayout="column" fxFlex="100" fxFlex.gt-xs="90" fxFlex.gt-md="90" fusePerfectScrollbar>
+  <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+    <div class="pl-16 pr-8 py-16" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="h1 font-weight-300">{{'BUSINESS.BUSINESS_DETAIL' | translate}}</div>
+
+      <button mat-icon-button aria-label="more" (click)="closeDetail()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="selectedBusiness" fusePerfectScrollbar>
+        
+      <form name="businessForm" [formGroup]="businessForm" class="business w-100-p" fxLayout="column" fxFlex>
+        <div class="content p-24">
+            <mat-tab-group [selectedIndex]="selectedTab.value" (selectedIndexChange)="selectedTab.setValue($event)">
+                <mat-tab label="{{'BUSINESS.GENERAL_INFO' | translate}}">
+                  <br>
+          <div>
+              <mat-form-field class="w-100-p">
+                  <input matInput name="name" formControlName="name" [(ngModel)]="selectedBusiness.generalInfo.name" placeholder="{{'BUSINESS.NAME' | translate}}"
+                    required>
+                  <mat-error *ngIf="businessForm.hasError('required', 'name')">
+                    {{'BUSINESS.NAME_IS' | translate}}
+                    <strong>{{'BUSINESS.REQUIRED' | translate}}</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100-p">
+                  <input matInput name="id" formControlName="id" [(ngModel)]="selectedBusiness.generalInfo.businessId" placeholder="{{'BUSINESS.ID' | translate}}"
+                    required>
+                  <mat-error *ngIf="businessForm.hasError('required', 'id')">
+                    {{'BUSINESS.ID_IS' | translate}}
+                    <strong>{{'BUSINESS.REQUIRED' | translate}}</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100-p">
+                  <mat-select placeholder="{{'BUSINESS.TYPE' | translate}}" [(value)]="selectedBusiness.generalInfo.type">
+                    <mat-option value="LEGAL">{{ 'BUSINESS.BUSINESS_TYPE_LEGAL' | translate }}</mat-option>
+                    <mat-option value="NATURAL">{{ 'BUSINESS.BUSINESS_TYPE_NATURAL' | translate }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="businessForm.hasError('required', 'type')">
+                    {{'BUSINESS.TYPE_IS' | translate}}
+                    <strong>{{'BUSINESS.REQUIRED' | translate}}</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100-p">
+                  <input matInput name="email" formControlName="email" [(ngModel)]="selectedBusiness.generalInfo.email" placeholder="{{'BUSINESS.EMAIL' | translate}}"
+                    required>
+                  <mat-error *ngIf="businessForm.hasError('required', 'email')">
+                    {{'BUSINESS.EMAIL_IS' | translate}}
+                    <strong>{{'BUSINESS.REQUIRED' | translate}}</strong>
+                  </mat-error>
+                  <mat-error *ngIf="businessForm.hasError('email', 'email')">
+                    {{'BUSINESS.EMAIL_IS' | translate}}
+                    <strong>{{'BUSINESS.INVALID' | translate}}</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100-p">
+                  <textarea matInput name="contactInfo" formControlName="contactInfo" [(ngModel)]="selectedBusiness.generalInfo.contactInfo"
+                    placeholder="{{'BUSINESS.CONTACTINFO' | translate}}" rows="5">
+                  </textarea>
+                </mat-form-field>
+
+                <mat-checkbox class="example-margin" formControlName="active" [(ngModel)]="selectedBusiness.state">{{'BUSINESS.ACTIVE' | translate}}</mat-checkbox>
+              
+          </div>
+          
+          <div class="mt-16">
+            <button mat-raised-button *ngIf="addNewBusiness" (click)="createBusiness()" [disabled]="businessForm.invalid || businessForm.pristine">{{'BUSINESS.CREATE' | translate}}</button>
+            <button mat-raised-button *ngIf="!addNewBusiness && selectedBusiness._id" (click)="updateBusiness()" [disabled]="businessForm.invalid || businessForm.pristine">{{'BUSINESS.SAVE' | translate}}</button>
+            <button mat-raised-button *ngIf="false" (click)="removeBusiness()" color="warn">{{'BUSINESS.DELETE' | translate}}</button>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{'BUSINESS.ATTRIBUTES' | translate}}" *ngIf="!addNewBusiness && selectedBusiness._id">            
+            <div  class="w-100-p">
+                <mat-divider></mat-divider>
+                <app-business-attributes *ngIf="selectedBusiness" businessId="{{selectedBusiness._id}}" (businessAttributesListChange)="handleBusinessAttributesChangedEvent($event)"></app-business-attributes>
+            </div>
+        </mat-tab>
+      </mat-tab-group>
+        </div>
+      </form>
+    
+    
+    
+    </div>
+
+  </div>
+</fuse-widget>

@@ -1,0 +1,106 @@
+input BusinessPersistInput {
+  "Business general info"
+  generalInfo: BusinessGeneralInfoInput
+  "Business attributes"
+  attributes: [BusinessAttributeInput],
+  "Business status"
+  state: Boolean!
+}
+
+input BusinessGeneralInfoInput {
+  "Business ID (NIT, CC, ...)"
+  businessId: String!,
+  "Business name"
+  name: String!,
+  "Business type (NATURAL, LEGAL)"
+  type: BusinessType!,
+  "Business email"
+  email: String,
+  "Business contact info"
+  contactInfo: String
+}
+
+input BusinessAttributeListInput {
+  attributes: [BusinessAttributeInput],
+}
+
+input BusinessAttributeInput {
+  "Key"
+  key: String,
+  "Value"
+  value: String
+}
+
+"Business info"
+type Business {
+  "Business id"
+  _id: ID
+  "Business general info"
+  generalInfo: GeneralInfo
+  "Business attributes"
+  attributes: [BusinessAttributes],
+  "Business status"
+  state: Boolean
+}
+
+type GeneralInfo {
+  "Business ID (NIT, CC, ...)"
+  businessId: String!,
+  "Business name"
+  name: String!,
+  "Business type (NATURAL, LEGAL)"
+  type: BusinessType,
+  "Business email"
+  email: String,
+  "Business contact info"
+  contactInfo: String
+}
+
+type BusinessAttributes {
+  "Key"
+  key: String,
+  "Value"
+  value: String
+}
+
+enum BusinessType {
+  NATURAL
+  LEGAL
+}
+
+type CommandResponse {
+  "Response code"
+  code: Int
+  "Response message"
+  message: String
+}
+
+type Query {
+  "Get business filtered by the business id"
+  getBusiness(id: String!): Business
+  "Get all businesses filtered"
+  getBusinesses(page: Int!, count: Int!, filter: String, sortColumn: String, sortOrder: String): [Business]
+  "Gets the amount of businesses"
+  getBusinessCount: Int
+}
+
+type Mutation {
+  "Create a new business"
+  persistBusiness(input: BusinessPersistInput): CommandResponse
+
+  "Updates the business general info"
+  updateBusinessGeneralInfo(id:ID, input: BusinessGeneralInfoInput): CommandResponse
+
+
+  "Updates the business attributes"
+  updateBusinessAttributes(id:ID, input: BusinessAttributeListInput): CommandResponse
+
+  "Updates the business state"
+  updateBusinessState(id:ID, state: Boolean): CommandResponse
+}
+
+type Subscription {
+  "This events is triggered when a business is created or updated"
+  BusinessUpdatedSubscription: Business
+}
+

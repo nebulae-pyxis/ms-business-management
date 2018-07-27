@@ -1,0 +1,112 @@
+<div id="business" class="page-layout carded fullwidth" fusePerfectScrollbar>
+
+  <!-- TOP BACKGROUND -->
+  <div class="top-bg mat-accent-bg"></div>
+  <!-- / TOP BACKGROUND -->
+
+  <!-- CENTER -->
+  <div class="center">
+
+    <!-- HEADER -->
+    <div class="header white-fg" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+
+      <!-- APP TITLE -->
+      <div class="logo my-12 m-sm-0" fxLayout="row" fxLayoutAlign="start center">
+        <mat-icon class="logo-icon mr-16" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">business</mat-icon>
+        <span class="logo-text h1" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">{{'BUSINESS.BUSINESS' | translate}}</span>
+      </div>
+
+      <!-- / APP TITLE -->
+
+      <!-- SEARCH -->
+      <div class="search-input-wrapper mx-12 m-md-0" fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
+        <label for="search" class="mr-8">
+          <mat-icon class="secondary-text">search</mat-icon>
+        </label>
+        <mat-form-field floatPlaceholder="never" fxFlex="1 0 auto">
+          <input id="search" matInput #filter placeholder="{{'BUSINESS.SEARCH' | translate}}">
+        </mat-form-field>
+      </div>
+      <!-- / SEARCH -->
+
+      <button mat-raised-button (click)="addNewBusiness()" class="add-product-button mat-white-bg my-12 mt-sm-0">
+        <span>{{'BUSINESS.ADD_BUSINESS' | translate}}</span>
+      </button>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT CARD -->
+    <div class="content-card mat-white-bg">
+
+      <div fxLayout="column" style="width: 100%; justify-content: space-between" fxLayout.gt-sm="row">
+        <div fxLayout="column" fxFlex="100" fxFlex.gt-sm="100" fxFlex.gt-md="100">
+          <mat-table class="business-table" #table (matSortChange)="sortData($event)" [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}"
+            fusePerfectScrollbar>
+
+            <!-- ID Column -->
+            <ng-container cdkColumnDef="ID">
+              <mat-header-cell mat-sort-header="ID" *cdkHeaderCellDef>{{'BUSINESS.ID' | translate}}</mat-header-cell>
+              <mat-cell *cdkCellDef="let business">
+                <p class="text-truncate">{{business.generalInfo.businessId}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container cdkColumnDef="name">
+              <mat-header-cell mat-sort-header="name" *cdkHeaderCellDef>{{'BUSINESS.NAME' | translate}}</mat-header-cell>
+              <mat-cell *cdkCellDef="let business">
+                <p class="text-truncate">{{business.generalInfo.name}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <!-- Type Column -->
+            <ng-container cdkColumnDef="type">
+              <mat-header-cell *cdkHeaderCellDef>{{'BUSINESS.TYPE' | translate}}</mat-header-cell>
+              <mat-cell *cdkCellDef="let business">
+                <p class="text-truncate" *ngIf="business.generalInfo.type == 'LEGAL'">{{'BUSINESS.LEGAL' | translate}}</p>
+                <p class="text-truncate" *ngIf="business.generalInfo.type == 'NATURAL'">{{'BUSINESS.NATURAL' | translate}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <!-- Active Column -->
+            <ng-container cdkColumnDef="active">
+              <mat-header-cell *cdkHeaderCellDef fxHide fxShow.gt-xs>{{'BUSINESS.ACTIVE' | translate}}</mat-header-cell>
+              <mat-cell *cdkCellDef="let business" fxHide fxShow.gt-xs>
+                <span class="quantity-indicator text-truncate" [ngClass]="{'mat-primary-200-bg': !business.state, 'mat-green-600-bg': business.state}">
+                </span>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
+
+            <mat-row *cdkRowDef="let business; columns: displayedColumns;"
+            (click)="selectRow(business)"
+            class="product"
+            [ngClass]="{'highlight': selectedBusiness && selectedBusiness._id == business._id}"
+              matRipple>
+            </mat-row>
+
+          </mat-table>
+
+          <mat-paginator #paginator
+          [length]="tableSize"
+          [pageIndex]="0"
+          [pageSize]="10"
+          [pageSizeOptions]="[5, 10, 25, 100]">
+          </mat-paginator>
+        </div>
+
+        <!-- BUSINESS DETAIL -->
+
+        <app-business-detail *ngIf="selectedBusiness" businessId="{{selectedBusiness._id}}" businessDetailAction="{{businessDetailAction}}" (businessCreated)="onBusinessCreated($event)" (closeBusinessDetail)="closeBusinessDetail($event)"></app-business-detail>
+
+        <!-- / BUSINESS DETAIL -->
+
+      </div>
+    </div>    
+    <!-- / CONTENT CARD -->
+  </div>
+  <!-- / CENTER -->
+</div>
+
+

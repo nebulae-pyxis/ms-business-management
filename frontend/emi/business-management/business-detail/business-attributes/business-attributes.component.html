@@ -1,0 +1,40 @@
+
+    <div class="content p-24" class="business w-100-p" fxLayout="column" fxFlex>
+<mat-table class="table-margin-bottom" #table [dataSource]="dataSource">
+  <ng-container matColumnDef="key">
+    <mat-header-cell *matHeaderCellDef> {{'BUSINESS.ATTRIBUTE_KEY' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <mat-form-field floatLabel="{{ row.editing ? 'float' : 'never'}}">
+        <input matInput [formControl]="row.validator.controls['key']" placeholder="{{'BUSINESS.ATTRIBUTE_KEY' | translate}}" [(ngModel)]="row.currentData.key">
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="value">
+    <mat-header-cell *matHeaderCellDef> {{'BUSINESS.ATTRIBUTE_VALUE' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <mat-form-field floatLabel="{{ row.editing ? 'float' : 'never'}}">
+        <input matInput [formControl]="row.validator.controls['value']" placeholder="{{'BUSINESS.ATTRIBUTE_VALUE' | translate}}" [(ngModel)]="row.currentData.value">
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="actionsColumn">
+    <mat-header-cell *matHeaderCellDef>
+      <button mat-icon-button color="accent" (click)="dataSource.createNew()"><mat-icon>add</mat-icon></button>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <button *ngIf="!row.editing" mat-icon-button color="accent" focusable="false" (click)="row.startEdit()">
+          <mat-icon  aria-label="button to edit">edit</mat-icon>
+      </button>
+      <button *ngIf="row.editing" mat-icon-button color="accent" focusable="false" (click)="row.confirmEditCreate()">
+        <mat-icon>check</mat-icon>
+          </button>
+      <button mat-icon-button color="accent" focusable="false" (click)="row.cancelOrDelete()">
+        <mat-icon>close</mat-icon>
+          </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+</div>

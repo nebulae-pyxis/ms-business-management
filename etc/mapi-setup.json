@@ -1,0 +1,8 @@
+[
+    {
+        "name": "business-management",
+        "type": "graphql",        
+        "src": "api/gateway/graphql/business-management",
+        "preBuildCommands": []
+    }
+]
