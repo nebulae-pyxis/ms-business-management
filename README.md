@@ -315,7 +315,7 @@ N/A
 
 ## Prepare environment
 
-![Development environment](docs/images/ms-devices-location-dev-env.png "Dev_environment")
+![Development environment](docs/images/ms-business-management-dev-env.png "Dev_environment")
 ### 1. clone this repo  
    ```git clone https://github.com/nebulae-pyxis/ms-business-management.git```  
    
