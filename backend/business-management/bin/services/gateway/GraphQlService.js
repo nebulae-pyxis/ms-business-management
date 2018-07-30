@@ -2,7 +2,7 @@
 
 const business = require("../../domain/Business")();
 const broker = require("../../tools/broker/BrokerFactory")();
-const Rx = require("../../../../../playground/gateway/node_modules/rxjs");
+const Rx = require("rxjs");
 const jsonwebtoken = require("jsonwebtoken");
 const jwtPublicKey = process.env.JWT_PUBLIC_KEY.replace(/\\n/g, "\n");
 

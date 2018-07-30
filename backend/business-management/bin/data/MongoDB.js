@@ -1,6 +1,6 @@
 'use strict'
 
-const Rx = require('../../../../playground/gateway/node_modules/rxjs');
+const Rx = require('rxjs');
 const MongoClient = require('mongodb').MongoClient;
 const CollectionName = "Business";
 let instance = null;

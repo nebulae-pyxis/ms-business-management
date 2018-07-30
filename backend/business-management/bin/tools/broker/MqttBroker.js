@@ -1,8 +1,8 @@
 'use strict'
 
 const MQTT = require("async-mqtt");
-const Rx = require('../../../../../playground/gateway/node_modules/rxjs');
-const uuidv4 = require('../../../../../playground/gateway/node_modules/uuid/v4');
+const Rx = require('rxjs');
+const uuidv4 = require('uuid/v4');
 
 class MqttBroker {
 

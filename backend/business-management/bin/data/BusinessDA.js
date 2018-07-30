@@ -3,7 +3,7 @@
 // const mongoDB = require("./MongoDB")();
 // const mongoDB = require('./MongoDB').singleton();
 let mongoDB = undefined;
-const Rx = require("../../../../playground/gateway/node_modules/rxjs");
+const Rx = require("rxjs");
 const CollectionName = "Business";
 const { CustomError } = require("../tools/customError");
 

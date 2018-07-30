@@ -1,11 +1,11 @@
 "use strict";
 
-const Rx = require("../../../../playground/gateway/node_modules/rxjs");
+const Rx = require("rxjs");
 const BusinessDA = require("../data/BusinessDA");
 const broker = require("../tools/broker/BrokerFactory")();
 const eventSourcing = require("../tools/EventSourcing")();
 const Event = require("@nebulae/event-store").Event;
-const uuidv4 = require("../../../../playground/gateway/node_modules/uuid/v4");
+const uuidv4 = require("uuid/v4");
 const MATERIALIZED_VIEW_TOPIC = "materialized-view-updates";
 const {
   CustomError,

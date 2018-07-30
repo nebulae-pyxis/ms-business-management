@@ -1,7 +1,7 @@
 'use strict'
 
-const Rx = require('../../../../../playground/gateway/node_modules/rxjs');
-const uuidv4 = require('../../../../../playground/gateway/node_modules/uuid/v4');
+const Rx = require('rxjs');
+const uuidv4 = require('uuid/v4');
 
 class PubSubBroker {
 
@@ -19,7 +19,7 @@ class PubSubBroker {
         this.verifiedTopics = {};
         this.listeningTopics = {};
 
-        const PubSub = require('../../../../../playground/gateway/node_modules/@google-cloud/pubsub');
+        const PubSub = require('@google-cloud/pubsub');
         this.pubsubClient = new PubSub({
         });
     }
