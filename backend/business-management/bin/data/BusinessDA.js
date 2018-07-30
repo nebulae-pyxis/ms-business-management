@@ -32,8 +32,8 @@ class BusinessDA {
   }
 
   /**
-   * Checks if a business exists with the given name
-   * @param {String} id If the id is specified,  we ignore the business with this id
+   * Returns the amount of business that match with the given name
+   * @param {String} id If the id is specified,  we dont count the business with this id
    * @param {String} businessName business name
    */
   static findBusinessName$(id, businessName) {
@@ -52,8 +52,8 @@ class BusinessDA {
    * gets all the business registered on the system.
    *
    * @param {int} page Indicates the page number which will be returned
-   * @param {int} count Indicates the amount of rows that will bve returned
-   * @param {filter} filter filter to apply to the query
+   * @param {int} count Indicates the amount of rows that will be returned
+   * @param {filter} filter filter to apply to the query.
    * @param {sortColumn} sortColumn Indicates what column will be used to sort the data
    * @param {order} order Indicates if the info will be asc or desc
    */

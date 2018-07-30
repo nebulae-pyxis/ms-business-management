@@ -28,6 +28,8 @@ spec:
   selector:
     matchLabels:
       app: bus-mgmt-mongo
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
