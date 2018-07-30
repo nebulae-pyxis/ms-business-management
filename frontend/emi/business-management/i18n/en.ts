@@ -8,6 +8,7 @@ export const locale = {
       NAME: "Name",
       CONTACTINFO: "Contact info",
       BUSINESS_FORMAT: "Format",
+      EMAIL: "Email",
       ACTIVE: "Active",
       SEARCH: "Search",
       ADD_BUSINESS: "Add business",

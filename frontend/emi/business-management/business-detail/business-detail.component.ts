@@ -285,13 +285,15 @@ export class BusinessDetailComponent implements OnInit {
 
       if (Array.isArray(response.errors)) {
         response.errors.forEach(error => {
-          error.forEach(errorDetail => {
-            this.showMessageSnackbar('ERRORS.' + errorDetail.message.code);
-          });
-        });
-      }else{
-        response.errors.forEach(error => {
-          this.showMessageSnackbar('ERRORS.' + error.message.code);
+          if (Array.isArray(error)) {
+            error.forEach(errorDetail => {
+              this.showMessageSnackbar('ERRORS.' + errorDetail.message.code);
+            });
+          }else{
+            response.errors.forEach(error => {
+              this.showMessageSnackbar('ERRORS.' + error.message.code);
+            });
+          }
         });
       }
     }
