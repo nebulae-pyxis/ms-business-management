@@ -1,11 +1,12 @@
 ![NebulaE](docs/images/nebula.png "Nebula Engineering SAS")
 
 # BusinessManagement
-The general porpouse of this service is to ...
+
+The general purpose of this service is manage (Create, update and query) the businesses registered on the platform.
 
 _This MicroService is built on top of NebulaE MicroService Framework.  Please see the [FrameWork project](https://github.com/NebulaEngineering/nebulae) to understand the full concept_**.
 
-![Intro](docs/images/ms-business-management_intro.png "Intro")
+![Intro](docs/images/ms-business-management-intro.png "Intro")
 # Table of Contents
   * [Project Structure](#structure)
   * [FrontEnd](#frontend)
@@ -22,11 +23,11 @@ _This MicroService is built on top of NebulaE MicroService Framework.  Please se
 
 ```
 ├── frontend                            => Micro-FrontEnd  
-│   └── emi                      => Micro-FrontEnd for [emi FrontEnd](https://github.com/nebulae-pyxis/emi)
+│   └── emi                             => Micro-FrontEnd for [emi FrontEnd](https://github.com/nebulae-pyxis/emi)
 ├── api                                 => Micro-APIs  
-│   └── gateway                           => Micro-API for [gateway API](https://github.com/nebulae-pyxis/gateway)  
+│   └── gateway                         => Micro-API for [gateway API](https://github.com/nebulae-pyxis/gateway)  
 ├── backend                             => Micro-BackEnds  
-│   ├── business-management                     => Micro-BackEnd responsible for ...
+│   ├── business-management             => Micro-BackEnd responsible for ...
 ├── etc                                 => Micro-Service config Files.  
 ├── deployment                          => Automatic deployment strategies  
 │   ├── compose                         => Docker-Compose environment for local development  
@@ -40,8 +41,32 @@ _This MicroService is built on top of NebulaE MicroService Framework.  Please se
 ├── README.md                           => This doc
 ```
 # Frontend <a name="frontend"></a>
-...
 
+In this section you can manage (Create, update, query) all the businesses that are registered on the platform and display them on the page. A business cannot be deleted, only can be deactivated.
+
+![BusinessAllForm](docs/images/business-all-form.png "BusinessAllForm")
+
+## Filter
+
+This section has a filter in which you can perform businesses searches by its ID or name.
+
+![BusinessFilter](docs/images/business-filter.png "BusinessFilter")
+
+## Business list
+
+All the registered businesses  will be shown on the view's table.
+
+![BusinessTable](docs/images/business-table.png "BusinessTable")
+
+## Form
+
+If you click over a business on the table component, the information of the business will be shown on the left panel. There you can create, edit, activate or deactivate a business. Once you change the data just click over the Save Button.
+
+![BusinessGeneralInfoForm](docs/images/business-general-info-form.png "BusinessGeneralInfoForm")
+
+If you want to update the attributes of a business, go to the attributes tab and edit the information on the table. On this tab, the information will be updated without needing to press save button.
+
+![BusinessAttributesForm](docs/images/business-attributes-form.png "BusinessAttributesForm")
 
 # API <a name="api"></a>
 Exposed interfaces to send Commands and Queries by the CQRS principles.
@@ -54,25 +79,135 @@ Note: You may find the GraphQL schema [here](api/gateway/graphql/business-manage
 
 ### GraphQL Enums
 
+* BusinessType: There are two types of businesses (LEGAL and NATURAL).
 
-### GraphQL types
-* HelloWorld: Sample type, please remove
-    * sn: String! => sample string
+### GraphQL types and Inputs
+* Business: this type represents the businesses
+
+      type Business {
+        _id: ID
+        generalInfo: GeneralInfo
+        attributes: [BusinessAttributes],
+        state: Boolean
+      }
+
+* GeneralInfo: Contains the general info of the business (Name, type, email, contactInfo, ...).
+
+      type GeneralInfo {
+        businessId: String!,
+        name: String!,
+        type: BusinessType,
+        email: String,
+        contactInfo: String
+      }
+
+* BusinessAttributes: Contains the attributes of the business.
+
+      type BusinessAttributes {
+        key: String
+        value: String
+      }
+
+* CommandResponse: this is the response of the mutations.
+
+      type CommandResponse{
+          code: Int
+          message: String
+      }
+
+* BusinessPersistInput: This input is used to create a new business
+
+      input BusinessPersistInput {
+        generalInfo: BusinessGeneralInfoInput
+        attributes: [BusinessAttributeInput],
+        state: Boolean!
+      }
+
+* BusinessGeneralInfoInput: This input is used to update the general info of a business
+
+      input BusinessGeneralInfoInput {
+        businessId: String!
+        name: String!
+        type: BusinessType!
+        email: String
+        contactInfo: String
+      }
+
+* BusinessAttributeListInput: This input is used to update the attributes of a business
+
+      input BusinessAttributeListInput {
+        attributes: [BusinessAttributeInput],
+      }
+
+      input BusinessAttributeInput {
+        key: String,
+        value: String
+      }
     
 ### GraphQL Queries
-#### getHelloWorldFrombusiness-management
-* Description : sample query, please remove
-* returns : HelloWorld object.
 
+#### getBusiness(id: String!): Business
+
+* Description: Gets the business filtered by the id.
+* Params: 
+    * id:  Id of the business
+* returns: Business object
+
+#### getBusinesses(page: Int!, count: Int!, filter: String, sortColumn: String, sortOrder: String): [Business]
+
+* Description: Gets the businesses according to the passed filters.
+* Params: 
+    * page: Page 
+    * count: Amount of business to return.
+    * filter: Text filter with which the businesses will be filtered.
+    * sortColumn: Column that will be used to filter the businesses.
+    * sortOrder: Indicates the order (asc, desc) with which the info will be sorted.
+* returns: Business object array
+
+#### getBusinessCount: Int
+
+* Description: Gets the amount of registered businesses 
+* returns: Int
 
 ### GraphQL Subscriptions
 
-#### business-managementHelloWorldSubscription
-* Description: sample subscription, please remove
-* Data: HelloWorld object
+#### BusinessUpdatedSubscription
+
+* Description: Event fired when a business is created or updated
+* returns: Business object
 
 ### GraphQL Mutations
-    N/A
+  
+#### persistBusiness(input: BusinessPersistInput): CommandResponse
+
+* Description: Creates a new business.
+* Params: 
+  * BusinessPersistInput
+* returns: CommandResponse
+
+#### updateBusinessGeneralInfo(id:ID, input: BusinessGeneralInfoInput): CommandResponse
+
+* Description: Updates the business general info
+* Params: 
+  * id: business id
+  * BusinessGeneralInfoInput
+* returns: CommandResponse
+
+#### updateBusinessAttributes(id:ID, input: BusinessAttributeListInput): CommandResponse
+
+* Description: Updates the business attributes
+* Params: 
+  * id: business id
+  * BusinessAttributeListInput
+* returns: CommandResponse
+
+#### updateBusinessAttributes(id:ID, input: BusinessAttributeListInput): CommandResponse
+
+* Description: Updates the business state
+* Params: 
+  * id: business id
+  * state: Boolean
+* returns: CommandResponse
 
 # BackEnd <a name="backend"></a>
 Backends are defined processes within a docker container.  
@@ -85,8 +220,6 @@ Each BackEnd has the following running commands:
   * npm test: runs unit tests
 
 ## business-management <a name="backend_business-management"></a>
-...
-
 
 ### Environment variables <a name="backend_business-management_env_vars"></a>
 
@@ -129,7 +262,7 @@ Each BackEnd has the following running commands:
 |                                          |        | Eg.: mongodb://127.0.0.1:27017/test                                                          |       |           |
 +------------------------------------------+--------+----------------------------------------------------------------------------------------------+-------+-----------+
 | MONGODB_DB_NAME                          | string | Materialized views MONGO DB name                                                             |       |     X     |
-|                                          |        | Eg.: DeviceAlarmReports                                                                  |       |           |
+|                                          |        | Eg.: business-management                                                                     |       |           |
 +------------------------------------------+--------+----------------------------------------------------------------------------------------------+-------+-----------+
 | JWT_PUBLIC_KEY                           | string | RSA Public key to verify JWT Tokens.                                                         |       |     X     |
 |                                          |        | Format: -----BEGIN PUBLIC KEY-----\nPUBLIC_KEY\n-----END PUBLIC KEY-----                     |       |           |
@@ -146,15 +279,26 @@ Each BackEnd has the following running commands:
 
 ### Event Sourcing <a name="backend_business-management_eventsourcing"></a>
     Event sourcing events this Micro-BackEnd is subscribed to or is publishing.
+
 #### Subscribed events:    
-*   EventType: what for ...
+* BusinessCreated: Business had been created.
+* BusinessGeneralInfoUpdated: Business general info had been updated.
+* BusinessAttributesUpdated: Business attributes had been updated.
+* BusinessActivated: Business has been activated.
+* BusinessDeactivated: Business has been deactivated.
+
 
 #### Published events: 
-*   EventType: what for ...
+* BusinessCreated: Business had been created.
+* BusinessGeneralInfoUpdated: Business general info had been updated.
+* BusinessAttributesUpdated: Business attributes had been updated.
+* BusinessActivated: Business has been activated.
+* BusinessDeactivated: Business has been deactivated.
 
 ### CronJobs <a name="backend_business-management_cronjobs"></a>
 Time-based jobs that are configured and triggered by the [CronJob MicroService](https://github.com/nebulae-pyxis/ms-cronjob)
 
+N/A
 
 # Development environment <a name="dev_env"></a>
 
@@ -175,11 +319,13 @@ Time-based jobs that are configured and triggered by the [CronJob MicroService](
 ### 1. clone this repo  
    ```git clone https://github.com/nebulae-pyxis/ms-business-management.git```  
    
+
 ### 2. start databases, broker and security systems using docker-compose
 ```
 cd deployment/compose/
 docker-compose up
 ```
+
 ### 3. setup keycloak
 
 #### LogIn to KeyCloak Admin Console
@@ -198,16 +344,16 @@ docker-compose up
 * set a password by editing the user, open the 'credentials' tabs, type a new password and deselect the 'Temporary' option
 
 
-Add the **developer** and **operator** rol to your user:
+Add the **business-manager**, **developer** and **operator** rol to your user:
 * select user option in the left panel and click on your user id.
 * select the 'role mapping' tab
-* select **developer** and **operator** options from available roles and click on add selected
+* select **business-manager**, **developer** and **operator** options from available roles and click on add selected
 
 ### 4. Create PlayGround folder
    PlayGround is a directory where we are going to place the FrontEnd and API shells so the developer can run tests
    ```
    cd  REPO_DIRECTORY
-   mkdir playgorund   
+   mkdir playground   
    ```
 
 ### 5. Compose FrontEnd

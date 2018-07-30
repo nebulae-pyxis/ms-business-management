@@ -201,7 +201,11 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
     } else {
       let businessFound = false;
       for (var i in newData) {
-        if ((newData[i] as any).generalInfo.name == business.generalInfo.name) {
+        if (
+          ((newData[i] as any)._id &&
+            (newData[i] as any)._id == business._id) ||
+          (newData[i] as any).generalInfo.name == business.generalInfo.name
+        ) {
           newData[i] = business;
           businessFound = true;
           break;
