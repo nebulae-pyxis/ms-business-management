@@ -30,6 +30,7 @@ spec:
       app: bus-mgmt-mongo
   strategy:
     type: Recreate
+    rollingUpdate: null
   template:
     metadata:
       labels:

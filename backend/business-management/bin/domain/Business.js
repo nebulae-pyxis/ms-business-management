@@ -191,6 +191,7 @@ class Business {
       );
     }
 
+    //Checks if the user that is performing this actions has the needed role to execute the operation.
     return this.checkPermissions(
       authToken,
       "BusinessManagement",

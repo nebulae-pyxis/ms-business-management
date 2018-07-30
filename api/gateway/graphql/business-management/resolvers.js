@@ -10,7 +10,6 @@ function getReponseFromBackEnd$(response) {
       const err = new Error();
       err.name = "Error";
       err.message = resp.result.error;
-      // this[Symbol()] = resp.result.error;
       Error.captureStackTrace(err, "Error");
       throw err;
     }
@@ -121,7 +120,6 @@ module.exports = {
 };
 
 //// SUBSCRIPTIONS SOURCES ////
-
 const eventDescriptors = [
   {
     backendEventName: "BusinessUpdatedSubscription",
