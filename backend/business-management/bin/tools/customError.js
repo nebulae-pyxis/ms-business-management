@@ -1,10 +1,3 @@
-//Every single error code
-// please use the prefix assigned to this micorservice
-const INTERNAL_SERVER_ERROR_CODE = 15001;
-const BUSINESS_MISSING_DATA_ERROR_CODE = 15010;
-const BUSINESS_NAME_EXISTS_ERROR_CODE = 15011;
-const BUSINESS_PERMISSION_DENIED_ERROR_CODE = 15012;
-
 /**
  * class to emcapsulute diferent errors.
  */
@@ -21,8 +14,7 @@ class CustomError extends Error {
         name: this.name,
         code: this.code,
         msg: this.message,      
-        method: this.method,
-        // stack: this.stack
+        method: this.method
       }
     }
   };
@@ -33,7 +25,6 @@ class CustomError extends Error {
       this.code = INTERNAL_SERVER_ERROR_CODE;
       this.name = anyError.name;
       this.msg = anyError.message;
-      // this.stack = anyError.stack;
     }
 
     getContent(){
@@ -47,9 +38,5 @@ class CustomError extends Error {
 
   module.exports =  { 
     CustomError,
-    DefaultError,
-    BUSINESS_MISSING_DATA_ERROR_CODE,
-    BUSINESS_NAME_EXISTS_ERROR_CODE,
-    BUSINESS_PERMISSION_DENIED_ERROR_CODE,
-    INTERNAL_SERVER_ERROR_CODE
+    DefaultError
   } 

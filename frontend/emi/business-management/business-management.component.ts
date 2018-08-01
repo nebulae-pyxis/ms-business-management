@@ -23,6 +23,7 @@ import { of, fromEvent } from "rxjs";
 import {
   first,
   filter,
+  tap,
   mergeMap,
   debounceTime,
   distinctUntilChanged
@@ -36,6 +37,7 @@ import { locale as spanish } from "./i18n/es";
 
 ////////// OTHERS ///////////
 import { BusinessManagementService } from "./business-management.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -69,6 +71,7 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
   constructor(
     private businessManagementervice: BusinessManagementService,
     private translationLoader: FuseTranslationLoaderService,
+    private translate: TranslateService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {
@@ -90,6 +93,7 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
       this.businessManagementervice
         .subscribeBusinessUpdatedSubscription$()
         .subscribe(result => {
+          console.log('SUBSCRIPTON WEB =>>> ', result);
           this.addAndUpdateBusinessToTable(result, false);
         })
     );
@@ -133,8 +137,12 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.businessManagementervice.getBusinessCount$().subscribe(result => {
-        this.tableSize = result;
+      this.businessManagementervice.getBusinessCount$()
+      .pipe(
+        mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
+        filter((resp: any) => !resp.errors || resp.errors.length === 0),
+      ).subscribe(result => {
+        this.tableSize = result.data.getBusinessCount;
       })
     );
   }
@@ -154,16 +162,18 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
    * Finds the businesses and updates the table data
    * @param page page number
    * @param count Limits the number of documents in the result set
-   * @param filter Filter text
+   * @param filterText Filter text
    * @param sortColumn Orders the documents by the specified column
    * @param sortOrder Orders the documents in the result set
    */
-  refreshDataTable(page, count, filter, sortColumn, sortOrder) {
+  refreshDataTable(page, count, filterText, sortColumn, sortOrder) {
     this.businessManagementervice
-      .getBusinesses$(page, count, filter, sortColumn, sortOrder)
-      .pipe(first())
-      .subscribe(model => {
-        this.dataSource.data = model;
+      .getBusinesses$(page, count, filterText, sortColumn, sortOrder)
+      .pipe(
+        mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
+        filter((resp: any) => !resp.errors || resp.errors.length === 0),
+      ).subscribe(model => {
+        this.dataSource.data = model.data.getBusinesses;
       });
   }
 
@@ -253,6 +263,70 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
       this.sortColumn,
       this.sortOrder
     );
+  }
+
+  /**
+   * Handles the Graphql errors and show a message to the user
+   * @param response 
+   */
+  graphQlAlarmsErrorHandler$(response){
+    return Rx.Observable.of(JSON.parse(JSON.stringify(response)))
+    .pipe(
+      tap((resp: any) => {
+        this.showSnackBarError(resp);
+        return resp;
+      })
+    );
+  }
+
+    /**
+   * Shows an error snackbar
+   * @param response
+   */
+  showSnackBarError(response){    
+    if (response.errors){
+
+      if (Array.isArray(response.errors)) {
+        response.errors.forEach(error => {
+          if (Array.isArray(error)) {
+            error.forEach(errorDetail => {
+              this.showMessageSnackbar('ERRORS.' + errorDetail.message.code);
+            });
+          }else{
+            response.errors.forEach(error => {
+              this.showMessageSnackbar('ERRORS.' + error.message.code);
+            });
+          }
+        });
+      }
+    }
+  }
+
+    /**
+   * Shows a message snackbar on the bottom of the page
+   * @param messageKey Key of the message to i18n
+   * @param detailMessageKey Key of the detail message to i18n
+   */
+  showMessageSnackbar(messageKey, detailMessageKey?){
+    let translationData = [];
+    if(messageKey){
+      translationData.push(messageKey);
+    }
+
+    if(detailMessageKey){
+      translationData.push(detailMessageKey);
+    }
+
+    this.translate.get(translationData)
+    .subscribe(data => {
+      this.snackBar.open(
+        messageKey ? data[messageKey]: '',
+        detailMessageKey ? data[detailMessageKey]: '',
+        {
+          duration: 2000
+        }
+      );
+    });
   }
 
   /**

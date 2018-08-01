@@ -10,10 +10,13 @@ const MATERIALIZED_VIEW_TOPIC = "materialized-view-updates";
 const {
   CustomError,
   DefaultError,
+} = require("../tools/customError");
+
+const {
   BUSINESS_MISSING_DATA_ERROR_CODE,
   BUSINESS_NAME_EXISTS_ERROR_CODE,
   BUSINESS_PERMISSION_DENIED_ERROR_CODE
-} = require("../tools/customError");
+} = require("../tools/ErrorCodes");
 
 /**
  * Singleton instance
@@ -26,17 +29,27 @@ class Business {
   /**
    * Gets the business according to the ID passed by args.
    *
-   * @param {*} root
    * @param {*} args args that contain the business ID
    * @param {string} jwt JWT token
    * @param {string} fieldASTs indicates the business attributes that will be returned
    */
   getBusiness$({ args, jwt, fieldASTs }, authToken) {
     // const requestedFields = this.getProjection(fieldASTs);
-    return BusinessDA.getBusiness$(args.id)
+
+    return this.checkPermissions(
+      authToken.realm_access.roles,
+      "BusinessManagement",
+      "changeBusinessState$()",
+      BUSINESS_PERMISSION_DENIED_ERROR_CODE,
+      "Permission denied",
+      ["business-manager"]
+    )
+      .mergeMap(val => {
+        return BusinessDA.getBusiness$(args.id);
+      })
       .mergeMap(rawResponse => this.buildSuccessResponse$(rawResponse))
       .catch(err => {
-        return this.errorHandler$(err);
+        return this.handleError$(err);
       });
   }
 
@@ -47,16 +60,27 @@ class Business {
    */
   getBusinesses$({ args }, authToken) {
     // const requestedFields = this.getProjection(fieldASTs);
-    return BusinessDA.getBusinesses$(
-      args.page,
-      args.count,
-      args.filter,
-      args.sortColumn,
-      args.sortOrder
+
+    return this.checkPermissions(
+      authToken.realm_access.roles,
+      "BusinessManagement",
+      "changeBusinessState$()",
+      BUSINESS_PERMISSION_DENIED_ERROR_CODE,
+      "Permission denied",
+      ["business-manager"]
     )
+      .mergeMap(val => {
+        return BusinessDA.getBusinesses$(
+          args.page,
+          args.count,
+          args.filter,
+          args.sortColumn,
+          args.sortOrder
+        );
+      })
       .mergeMap(rawResponse => this.buildSuccessResponse$(rawResponse))
       .catch(err => {
-        return this.errorHandler$(err);
+        return this.handleError$(err);
       });
   }
 
@@ -64,9 +88,19 @@ class Business {
    * Get the amount of rows from the business collection
    */
   getBusinessCount$(data, authToken) {
-    return BusinessDA.getBusinessCount$()
+    return this.checkPermissions(
+      authToken.realm_access.roles,
+      "BusinessManagement",
+      "changeBusinessState$()",
+      BUSINESS_PERMISSION_DENIED_ERROR_CODE,
+      "Permission denied",
+      ["business-manager"]
+    )
+      .mergeMap(val => {
+        return BusinessDA.getBusinessCount$();
+      })
       .mergeMap(rawResponse => this.buildSuccessResponse$(rawResponse))
-      .catch(err => this.errorHandler$(err));
+      .catch(err => this.handleError$(err));
   }
 
   /**
@@ -97,7 +131,7 @@ class Business {
     business.generalInfo.name = business.generalInfo.name.trim();
     business._id = uuidv4();
     return this.checkPermissions(
-      authToken,
+      authToken.realm_access.roles,
       "BusinessManagement",
       "createBusiness$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
@@ -114,7 +148,8 @@ class Business {
                 "BusinessManagement",
                 "createBusiness$()",
                 BUSINESS_NAME_EXISTS_ERROR_CODE,
-                "Business name exists"
+                "Business name exists",
+                ["business-manager"]
               )
             );
           }
@@ -138,30 +173,7 @@ class Business {
         };
       })
       .mergeMap(rawResponse => this.buildSuccessResponse$(rawResponse))
-      .catch(err => this.errorHandler$(err));
-  }
-
-  /**
-   * Checks if the user has the permissions needed, otherwise throws an error according to the passed parameters
-   */
-  checkPermissions(authToken, name, method, errorCode, errorMessage) {
-    return (
-      Rx.Observable.of(authToken.realm_access.roles)
-        //.filter(roles => rol == "business-manager")
-        .mergeMap(roles => {
-          if (
-            roles == undefined ||
-            roles.length == 0 ||
-            !roles.includes("business-manager")
-          ) {
-            console.log('Rx.Observable.throw PERMISSION');
-            return Rx.Observable.throw(
-              new CustomError(name, method, errorCode, errorMessage)
-            );
-          }
-          return Rx.Observable.of(undefined);
-        })
-    );
+      .catch(err => this.handleError$(err));
   }
 
   /**
@@ -193,11 +205,12 @@ class Business {
 
     //Checks if the user that is performing this actions has the needed role to execute the operation.
     return this.checkPermissions(
-      authToken,
+      authToken.realm_access.roles,
       "BusinessManagement",
       "updateBusinessGeneralInfo$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
-      "Permission denied"
+      "Permission denied",
+      ["business-manager"]
     )
       .mergeMap(val => {
         return BusinessDA.findBusinessName$(id, generalInfo.name).mergeMap(
@@ -233,7 +246,7 @@ class Business {
         };
       })
       .mergeMap(rawResponse => this.buildSuccessResponse$(rawResponse))
-      .catch(err => this.errorHandler$(err));
+      .catch(err => this.handleError$(err));
   }
 
   /**
@@ -258,11 +271,12 @@ class Business {
     }
 
     return this.checkPermissions(
-      authToken,
+      authToken.realm_access.roles,
       "BusinessManagement",
       "updateBusinessAttributes$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
-      "Permission denied"
+      "Permission denied",
+      ["business-manager"]
     )
       .mergeMap(val => {
         return eventSourcing.eventStore.emitEvent$(
@@ -283,7 +297,7 @@ class Business {
         };
       })
       .mergeMap(rawResponse => this.buildSuccessResponse$(rawResponse))
-      .catch(err => this.errorHandler$(err));
+      .catch(err => this.handleError$(err));
   }
 
   /**
@@ -306,17 +320,26 @@ class Business {
       );
     }
 
-    return eventSourcing.eventStore
-      .emitEvent$(
-        new Event({
-          eventType: newState ? "BusinessActivated" : "BusinessDeactivated",
-          eventTypeVersion: 1,
-          aggregateType: "Business",
-          aggregateId: id,
-          data: newState,
-          user: authToken.preferred_username
-        })
-      )
+    this.checkPermissions(
+      authToken.realm_access.roles,
+      "BusinessManagement",
+      "changeBusinessState$()",
+      BUSINESS_PERMISSION_DENIED_ERROR_CODE,
+      "Permission denied",
+      ["business-manager"]
+    )
+      .mergeMap(val => {
+        return eventSourcing.eventStore.emitEvent$(
+          new Event({
+            eventType: newState ? "BusinessActivated" : "BusinessDeactivated",
+            eventTypeVersion: 1,
+            aggregateType: "Business",
+            aggregateId: id,
+            data: newState,
+            user: authToken.preferred_username
+          })
+        );
+      })
       .map(result => {
         return {
           code: 200,
@@ -324,11 +347,55 @@ class Business {
         };
       })
       .mergeMap(rawResponse => this.buildSuccessResponse$(rawResponse))
-      .catch(err => this.errorHandler$(err));
+      .catch(err => this.handleError$(err));
   }
 
   //#region  mappers for API responses
-  errorHandler$(err) {
+
+  /**
+   * Checks if the user has the permissions needed, otherwise throws an error according to the passed parameters.
+   *
+   * @param {*} UserRoles Roles of the authenticated user
+   * @param {*} name Context name
+   * @param {*} method method name
+   * @param {*} errorCode  This is the error code that will be thrown if the user do not have the required roles
+   * @param {*} errorMessage This is the error message that will be used if the user do not have the required roles
+   * @param {*} requiredRoles Array with required roles (The authenticated user must have at least one of the required roles,
+   *  otherwise the operation that the user is trying to do will be rejected.
+   */
+  checkPermissions(
+    userRoles,
+    name,
+    method,
+    errorCode,
+    errorMessage,
+    requiredRoles
+  ) {
+    return Rx.Observable.from(requiredRoles)
+      .map(requiredRole => {
+        if (
+          userRoles == undefined ||
+          userRoles.length == 0 ||
+          !userRoles.includes(requiredRole)
+        ) {
+          return false;
+        }
+        return true;
+      })
+      .toArray()
+      .mergeMap(validRoles => {
+        //Evaluates if the user has at least one of the required roles assigned
+        if (!validRoles.includes(true)) {
+          return Rx.Observable.throw(
+            new CustomError(name, method, errorCode, errorMessage)
+          );
+        } else {
+          return Rx.Observable.of(validRoles);
+        }
+      });
+  }
+
+  handleError$(err) {
     return Rx.Observable.of(err).map(err => {
       const exception = { data: null, result: {} };
       const isCustomError = err instanceof CustomError;

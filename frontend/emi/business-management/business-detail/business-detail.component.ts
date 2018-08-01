@@ -97,12 +97,15 @@ export class BusinessDetailComponent implements OnInit {
   findBusinessById(businessId) {
     this.businessDetailService
       .getBusinessDetail$(businessId)
-      .pipe(first())
+      .pipe(
+        mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
+        filter((resp: any) => !resp.errors || resp.errors.length === 0),
+      )      
       .subscribe(business => {
         //Keeps two references of the business variable to check if it was changed or not.
-        this.selectedBusiness = JSON.parse(JSON.stringify(business));
+        this.selectedBusiness = JSON.parse(JSON.stringify(business.data.getBusiness));
         this.selectedBusinessWithoutChanges = JSON.parse(
-          JSON.stringify(business)
+          JSON.stringify(business.data.getBusiness)
         );
       });
   }

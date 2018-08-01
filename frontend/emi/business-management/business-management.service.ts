@@ -20,7 +20,7 @@ export class BusinessManagementService {
   /**
    * Get the businesses filtered
    */
-  getBusinesses$(pageValue, countValue, filterText, sortColumn, sortOrder): Observable<any[]> {
+  getBusinesses$(pageValue, countValue, filterText, sortColumn, sortOrder): Observable<any> {
     return this.gateway.apollo
       .query<any>({
         query: getBusinesses,
@@ -31,20 +31,20 @@ export class BusinessManagementService {
           sortColumn: sortColumn,
           sortOrder: sortOrder
         },
-        fetchPolicy: "network-only"
-      })
-      .pipe(map(rawData => rawData.data.getBusinesses));
+        fetchPolicy: "network-only",
+        errorPolicy: 'all'
+      });
   }
 
   /**
    * Returns the amount of businesses registered on the system
    */
-  getBusinessCount$(): Observable<number> {
+  getBusinessCount$(): Observable<any> {
     return this.gateway.apollo
     .query<any>({
-      query: getBusinessCount
-    })
-    .pipe(map(rawData => rawData.data.getBusinessCount));
+      query: getBusinessCount,
+      errorPolicy: 'all'
+    });
   }
 
 

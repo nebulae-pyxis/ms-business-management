@@ -30,7 +30,7 @@ export class BusinessDetailService {
    * gets the business detailt by its Id
    * @param id business ID
    */
-  getBusinessDetail$(id): Observable<any[]> {
+  getBusinessDetail$(id): Observable<any> {
     return this.gateway.apollo
       .query<any>({
         query: getBusiness,
@@ -39,8 +39,7 @@ export class BusinessDetailService {
         },
         fetchPolicy: 'network-only',
         errorPolicy: 'all'
-      })
-      .pipe(map(rawData => rawData.data.getBusiness));
+      });
   }
 
   /**
