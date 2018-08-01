@@ -87,7 +87,6 @@ class Business {
    * Get the amount of rows from the business collection
    */
   getBusinessCount$(data, authToken) {
-    console.log('BACKEND getBusinessCount');
     return RoleValidator.checkPermissions$(
       authToken.realm_access.roles,
       "BusinessManagement",

@@ -153,7 +153,7 @@ jobs:
             mkdir ~/nebulae/backend
             cp ~/nebulae/go/mbinit ~/nebulae/repo/backend/business-management/
             export DOCKERHUB_IMAGE=business-management.backend.business-management
-            export DOCKERHUB_TAG=0.0.6
+            export DOCKERHUB_TAG=0.0.7
             gitChanged backend/business-management || docker build  -t $DOCKERHUB_NAMESPACE/$DOCKERHUB_IMAGE:$DOCKERHUB_TAG -t $DOCKERHUB_NAMESPACE/$DOCKERHUB_IMAGE:latest ~/nebulae/repo/backend/business-management/
             gitChanged backend/business-management || docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS
             gitChanged backend/business-management || docker push $DOCKERHUB_NAMESPACE/$DOCKERHUB_IMAGE:$DOCKERHUB_TAG

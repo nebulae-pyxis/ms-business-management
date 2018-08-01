@@ -92,9 +92,13 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.businessManagementervice
         .subscribeBusinessUpdatedSubscription$()
+        .pipe(
+          mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
+          filter((resp: any) => !resp.errors || resp.errors.length === 0),
+        )
         .subscribe(result => {
-          console.log('SUBSCRIPTON WEB =>>> ', result);
-          this.addAndUpdateBusinessToTable(result, false);
+          console.log('SUBSCRIPTON WEB =>>> ', result.data.BusinessUpdatedSubscription);
+          this.addAndUpdateBusinessToTable(result.data.BusinessUpdatedSubscription, false);
         })
     );
 

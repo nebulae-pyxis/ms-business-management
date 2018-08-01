@@ -92,7 +92,6 @@ module.exports = {
         .toPromise();
     },
     getBusinessCount(root, args, context) {
-      console.log('API getBusinessCount');
       return RoleValidator.checkPermissions$(
         context.authToken.realm_access.roles,
         contextName,
@@ -208,16 +207,25 @@ module.exports = {
     BusinessUpdatedSubscription: {
       subscribe: withFilter(
         (payload, variables, context, info) => {
-          return pubsub.asyncIterator("BusinessUpdatedSubscription");
+          //Checks the roles of the user, if the user does not have at least one of the required roles, an error will be thrown
+          RoleValidator.checkAndThrowError(
+            context.authToken.realm_access.roles, 
+            ["business-manager"], 
+            contextName, 
+            "BusinessUpdatedSubscription", 
+            BUSINESS_PERMISSION_DENIED_ERROR_CODE, 
+            "Permission denied");
+
+          return pubsub.asyncIterator("BusinessUpdatedSubscription");  
         },
-        (payload, variables, context, info) => {
-          // This event can only be sent to users with business manager role.
-          return RoleValidator.hasPermissions(context.authToken.realm_access.roles,  ["business-manager"]);
+        (payload, variables, context, info) => {          
+          return true;
         }
       )
     }
   }
 };
+
 
 //// SUBSCRIPTIONS SOURCES ////
 const eventDescriptors = [

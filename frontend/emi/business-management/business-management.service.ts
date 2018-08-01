@@ -55,8 +55,7 @@ export class BusinessManagementService {
   return this.gateway.apollo
     .subscribe({
       query: subscribeBusinessUpdatedSubscription
-    })
-    .map(resp => resp.data.BusinessUpdatedSubscription);
+    });
   }
 
 }
