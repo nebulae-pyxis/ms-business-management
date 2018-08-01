@@ -48,7 +48,6 @@ function handleError$(err, methodName) {
 
 module.exports = {
   //// QUERY ///////
-
   Query: {
     getBusiness(root, args, context) {
       return RoleValidator.checkPermissions$(

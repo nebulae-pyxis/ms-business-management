@@ -13,7 +13,7 @@ spec:
         app: business-management
     spec:      
       containers:
-      - image: nebulaepyxis/business-management.backend.business-management:0.0.5
+      - image: nebulaepyxis/business-management.backend.business-management:0.0.6
         name: business-management
         volumeMounts:
         - name: google-application-credentials
