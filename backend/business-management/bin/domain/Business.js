@@ -4,6 +4,7 @@ const Rx = require("rxjs");
 const BusinessDA = require("../data/BusinessDA");
 const broker = require("../tools/broker/BrokerFactory")();
 const eventSourcing = require("../tools/EventSourcing")();
+const RoleValidator = require("../tools/RoleValidator");
 const Event = require("@nebulae/event-store").Event;
 const uuidv4 = require("uuid/v4");
 const MATERIALIZED_VIEW_TOPIC = "materialized-view-updates";
@@ -11,7 +12,6 @@ const {
   CustomError,
   DefaultError,
 } = require("../tools/customError");
-
 const {
   BUSINESS_MISSING_DATA_ERROR_CODE,
   BUSINESS_NAME_EXISTS_ERROR_CODE,
@@ -36,7 +36,7 @@ class Business {
   getBusiness$({ args, jwt, fieldASTs }, authToken) {
     // const requestedFields = this.getProjection(fieldASTs);
 
-    return this.checkPermissions(
+    return RoleValidator.checkPermissions$(
       authToken.realm_access.roles,
       "BusinessManagement",
       "changeBusinessState$()",
@@ -60,8 +60,7 @@ class Business {
    */
   getBusinesses$({ args }, authToken) {
     // const requestedFields = this.getProjection(fieldASTs);
-
-    return this.checkPermissions(
+    return RoleValidator.checkPermissions$(
       authToken.realm_access.roles,
       "BusinessManagement",
       "changeBusinessState$()",
@@ -88,7 +87,8 @@ class Business {
    * Get the amount of rows from the business collection
    */
   getBusinessCount$(data, authToken) {
-    return this.checkPermissions(
+    console.log('BACKEND getBusinessCount');
+    return RoleValidator.checkPermissions$(
       authToken.realm_access.roles,
       "BusinessManagement",
       "changeBusinessState$()",
@@ -130,7 +130,7 @@ class Business {
 
     business.generalInfo.name = business.generalInfo.name.trim();
     business._id = uuidv4();
-    return this.checkPermissions(
+    return RoleValidator.checkPermissions$(
       authToken.realm_access.roles,
       "BusinessManagement",
       "createBusiness$()",
@@ -204,7 +204,7 @@ class Business {
     }
 
     //Checks if the user that is performing this actions has the needed role to execute the operation.
-    return this.checkPermissions(
+    return RoleValidator.checkPermissions$(
       authToken.realm_access.roles,
       "BusinessManagement",
       "updateBusinessGeneralInfo$()",
@@ -270,7 +270,7 @@ class Business {
       );
     }
 
-    return this.checkPermissions(
+    return RoleValidator.checkPermissions$(
       authToken.realm_access.roles,
       "BusinessManagement",
       "updateBusinessAttributes$()",
@@ -320,7 +320,7 @@ class Business {
       );
     }
 
-    this.checkPermissions(
+    return RoleValidator.checkPermissions$(
       authToken.realm_access.roles,
       "BusinessManagement",
       "changeBusinessState$()",
@@ -351,49 +351,6 @@ class Business {
   }
 
   //#region  mappers for API responses
-
-  /**
-   * Checks if the user has the permissions needed, otherwise throws an error according to the passed parameters.
-   *
-   * @param {*} UserRoles Roles of the authenticated user
-   * @param {*} name Context name
-   * @param {*} method method name
-   * @param {*} errorCode  This is the error code that will be thrown if the user do not have the required roles
-   * @param {*} errorMessage This is the error message that will be used if the user do not have the required roles
-   * @param {*} requiredRoles Array with required roles (The authenticated user must have at least one of the required roles,
-   *  otherwise the operation that the user is trying to do will be rejected.
-   */
-  checkPermissions(
-    userRoles,
-    name,
-    method,
-    errorCode,
-    errorMessage,
-    requiredRoles
-  ) {
-    return Rx.Observable.from(requiredRoles)
-      .map(requiredRole => {
-        if (
-          userRoles == undefined ||
-          userRoles.length == 0 ||
-          !userRoles.includes(requiredRole)
-        ) {
-          return false;
-        }
-        return true;
-      })
-      .toArray()
-      .mergeMap(validRoles => {
-        //Evaluates if the user has at least one of the required roles assigned
-        if (!validRoles.includes(true)) {
-          return Rx.Observable.throw(
-            new CustomError(name, method, errorCode, errorMessage)
-          );
-        } else {
-          return Rx.Observable.of(validRoles);
-        }
-      });
-  }
 
   handleError$(err) {
     return Rx.Observable.of(err).map(err => {

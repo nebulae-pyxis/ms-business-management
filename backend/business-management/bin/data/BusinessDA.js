@@ -1,7 +1,5 @@
 "use strict";
 
-// const mongoDB = require("./MongoDB")();
-// const mongoDB = require('./MongoDB').singleton();
 let mongoDB = undefined;
 const Rx = require("rxjs");
 const CollectionName = "Business";

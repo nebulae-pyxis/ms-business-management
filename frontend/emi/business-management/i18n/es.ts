@@ -40,9 +40,9 @@ export const locale = {
     },
     ERRORS: {
       15001: 'Error interno de servidor',
+      15002: 'Permiso denegado',
       15010: 'Datos faltantes del negocio',
-      15011: 'Nombre de negocio ya existe',
-      15012: 'Permiso denegado'
+      15011: 'Nombre de negocio ya existe'      
     }
   }
 };

@@ -41,9 +41,9 @@ export const locale = {
     },
     ERRORS: {
       15001: 'Internal server error',
+      15002: 'Permission denied',
       15010: 'Business missing data',
-      15011: 'Business name already exists',
-      15012: 'Permission denied'
+      15011: 'Business name already exists'
     }
   }
 };
