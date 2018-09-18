@@ -4,29 +4,29 @@
         "src": "frontend/emi/business-management",
         "groups": [
             {
-              "id": "Business",
-              "icon": "business",
+              "id": "RESOURCES",
+              "icon": "bookmarks",
               "translate": {
-                "en": "Business",
-                "es": "Negocios"
+                "en": "Resources",
+                "es": "Recursos"
               },
               "priority": 1000
             }
           ],
         "contents": [
             {
-                "groupId": "Business",
+                "groupId": "RESOURCES",
                 "id": "business-management",
                 "icon": "business",
                 "translate": {
-                    "en": "Business manmagement",
-                    "es": "Administración de negocios"
+                    "en": "Business",
+                    "es": "Negocios"
                 },
                 "navURL": "/business-management",
                 "path": "business-management",
                 "loadChildren": "./main/content/business-management/business-management.module#BusinessManagementModule",
-                "priority": 1000,
-                "roles" : ["developer","business-manager"],
+                "priority": 10000,
+                "roles" : ["business-manager"],
                 "default" : false
             }            
         ],

@@ -90,7 +90,7 @@ class Business {
     return RoleValidator.checkPermissions$(
       authToken.realm_access.roles,
       "BusinessManagement",
-      "changeBusinessState$()",
+      "getBusinessCount$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
       ["business-manager"]
@@ -218,7 +218,7 @@ class Business {
               return Rx.Observable.throw(
                 new CustomError(
                   "BusinessManagement",
-                  "createBusiness$()",
+                  "updateBusinessGeneralInfo$()",
                   BUSINESS_NAME_EXISTS_ERROR_CODE,
                   "Business name exists"
                 )
