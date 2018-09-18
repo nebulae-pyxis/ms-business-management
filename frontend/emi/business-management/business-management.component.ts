@@ -97,7 +97,6 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
           filter((resp: any) => !resp.errors || resp.errors.length === 0),
         )
         .subscribe(result => {
-          console.log('SUBSCRIPTON WEB =>>> ', result.data.BusinessUpdatedSubscription);
           this.addAndUpdateBusinessToTable(result.data.BusinessUpdatedSubscription, false);
         })
     );
