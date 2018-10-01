@@ -19,8 +19,8 @@
                 "id": "business-management",
                 "icon": "business",
                 "translate": {
-                    "en": "Business",
-                    "es": "Negocios"
+                    "en": "Agents",
+                    "es": "Agentes"
                 },
                 "navURL": "/business-management",
                 "path": "business-management",

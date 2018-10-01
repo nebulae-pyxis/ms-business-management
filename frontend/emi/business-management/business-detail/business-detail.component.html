@@ -15,6 +15,9 @@
                 <mat-tab label="{{'BUSINESS.GENERAL_INFO' | translate}}">
                   <br>
           <div>
+              <mat-form-field class="w-100-p" *ngIf="!addNewBusiness">
+                  <input matInput name="idSystem" formControlName="idSystem" [(ngModel)]="selectedBusiness._id" placeholder="{{'BUSINESS.ID_SYSTEM' | translate}}">
+              </mat-form-field>
               <mat-form-field class="w-100-p">
                   <input matInput name="name" formControlName="name" [(ngModel)]="selectedBusiness.generalInfo.name" placeholder="{{'BUSINESS.NAME' | translate}}"
                     required>

@@ -66,6 +66,7 @@ export class BusinessDetailComponent implements OnInit {
   set businessDetailAction(businessDetailAction: any) {
     this._businessDetailAction = businessDetailAction;
     this.addNewBusiness = businessDetailAction == "ADD";
+    console.log('addNewBusiness => ', this.addNewBusiness);
     this.selectedBusiness = {
       generalInfo: {},
       active: false
@@ -81,6 +82,7 @@ export class BusinessDetailComponent implements OnInit {
    */
   createBusinessForm() {
     return this.formBuilder.group({
+      idSystem: new FormControl({value: '', disabled: true}),
       name: new FormControl(),
       id: new FormControl(),
       type: new FormControl(),
@@ -136,14 +138,14 @@ export class BusinessDetailComponent implements OnInit {
               filter((resp: any) => !resp.errors || resp.errors.length === 0),
             )
             .subscribe(model => {
-              this.snackBar.open("El negocio ha sido creada", "Cerrar", {
+              this.snackBar.open("El agente ha sido creada", "Cerrar", {
                 duration: 2000
               });
               this.businessCreated.emit(this.selectedBusiness);
               this.closeDetail();
             },
           error => {
-            console.log('Error creando business ==> ', error);
+            console.log('Error creando agente ==> ', error);
           });
         }
       });
@@ -206,7 +208,7 @@ export class BusinessDetailComponent implements OnInit {
               filter((resp: any) => !resp.errors || resp.errors.length === 0),
             ).subscribe(
               model => {
-                this.snackBar.open('Negocio ha sido editado', 'Cerrar', {
+                this.snackBar.open('Agente ha sido editado', 'Cerrar', {
                   duration: 2000
                 });
                 this.selectedBusinessWithoutChanges = JSON.parse(

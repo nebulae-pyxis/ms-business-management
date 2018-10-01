@@ -63,7 +63,7 @@ class Business {
     return RoleValidator.checkPermissions$(
       authToken.realm_access.roles,
       "BusinessManagement",
-      "changeBusinessState$()",
+      "getBusinesses$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
       ["business-manager"]

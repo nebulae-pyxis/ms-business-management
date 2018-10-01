@@ -2,18 +2,19 @@ export const locale = {
   lang: 'en',
   data: {
     BUSINESS: {
+      ID_SYSTEM: "System ID",
       ID: "ID",
-      TYPE: "Business type",
-      BUSINESS: "Business",
+      TYPE: "Nature of the agent",
+      BUSINESS: "Agent",
       NAME: "Name",
       CONTACTINFO: "Contact info",
       BUSINESS_FORMAT: "Format",
       EMAIL: "Email",
       ACTIVE: "Active",
       SEARCH: "Search",
-      ADD_BUSINESS: "Add business",
-      BUSINESS_DETAIL: "Business detail",
-      SELECT_BUSINESS_TYPE: "Select business type",
+      ADD_BUSINESS: "Add agent",
+      BUSINESS_DETAIL: "Agent detail",
+      SELECT_BUSINESS_TYPE: "Select nature of the agent",
       BUSINESS_TYPE_LEGAL: "Legal person",
       BUSINESS_TYPE_NATURAL: "Natural person",
       LEGAL: "Legal person",
@@ -26,12 +27,12 @@ export const locale = {
       DELETE: "Delete",
       CANCEL: "Cancel",
       CREATE: "Create",
-      REMOVE_BUSINESS_TITLE: "Remove business",
-      REMOVE_BUSINESS_MESSAGE: "Are you sure you want to delete this business?",
-      UPDATE_BUSINESS_MESSAGE: "Are you sure you want to update this business?",
-      CREATE_BUSINESS_TITLE: "Create business",
-      CREATE_BUSINESS_MESSAGE: "Are you sure you want to create this business?",
-      UPDATE_BUSINESS_TITLE: "Update business",
+      REMOVE_BUSINESS_TITLE: "Remove agent",
+      REMOVE_BUSINESS_MESSAGE: "Are you sure you want to delete this agent?",
+      UPDATE_BUSINESS_MESSAGE: "Are you sure you want to update this agent?",
+      CREATE_BUSINESS_TITLE: "Create agent",
+      CREATE_BUSINESS_MESSAGE: "Are you sure you want to create this agent?",
+      UPDATE_BUSINESS_TITLE: "Update agent",
       INVALID: "invalid",
       NAME_IS: "name is",
       EMAIL_IS: "Email is",
@@ -42,8 +43,8 @@ export const locale = {
     ERRORS: {
       15001: 'Internal server error',
       15002: 'Permission denied',
-      15010: 'Business missing data',
-      15011: 'Business name already exists'
+      15010: 'Agent missing data',
+      15011: 'Agent name already exists'
     }
   }
 };
