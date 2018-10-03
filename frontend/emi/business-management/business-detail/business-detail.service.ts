@@ -49,7 +49,8 @@ export class BusinessDetailService {
   createBusinessDetail$(business): Observable<any> {
     const businessPersistInput = {
       generalInfo: {
-        businessId: business.generalInfo.businessId,
+        documentType: business.generalInfo.documentType,
+        documentId: business.generalInfo.documentId,
         name: business.generalInfo.name,
         type: business.generalInfo.type,
         email: business.generalInfo.email,

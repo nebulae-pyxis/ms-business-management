@@ -2,8 +2,13 @@ export const locale = {
   lang: 'es',
   data: {
     BUSINESS: {
-      ID_SYSTEM: "ID Sistema",
-      ID: "ID (NIT, Documento de identificación...)",
+      ID_SYSTEM: "ID",
+      DOCUMENT_TYPE: "Tipo documento",
+      DOCUMENT_ID: "N. Documento identificación",
+      CITIZENSHIP_CARD: "Cédula de ciudadanía",
+      FOREIGNER_ID: "Cédula de extranjería",
+      VAT: "NIT",
+      PASSPORT: "Pasaporte",
       TYPE: "Naturaleza",
       BUSINESS: "Agentes",
       NAME: "Nombre",

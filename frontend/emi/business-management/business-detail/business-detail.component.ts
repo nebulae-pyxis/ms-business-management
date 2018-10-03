@@ -84,7 +84,8 @@ export class BusinessDetailComponent implements OnInit {
     return this.formBuilder.group({
       idSystem: new FormControl({value: '', disabled: true}),
       name: new FormControl(),
-      id: new FormControl(),
+      documentType: new FormControl(),
+      documentId: new FormControl(),
       type: new FormControl(),
       email: new FormControl("", Validators.email),
       active: new FormControl(),
@@ -183,7 +184,8 @@ export class BusinessDetailComponent implements OnInit {
 
           if (generalInfoChanged) {
             businessGeneralInfoInput = {
-              businessId: this.selectedBusiness.generalInfo.businessId,
+              documentType: this.selectedBusiness.generalInfo.documentType,
+              documentId: this.selectedBusiness.generalInfo.documentId,
               name: this.selectedBusiness.generalInfo.name,
               type: this.selectedBusiness.generalInfo.type,
               email: this.selectedBusiness.generalInfo.email,

@@ -7,7 +7,8 @@ export const getBusiness = gql`
     getBusiness(id: $id) {
       _id
       generalInfo {
-        businessId
+        documentType
+        documentId
         name
         type      
         email

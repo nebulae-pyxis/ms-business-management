@@ -8,8 +8,10 @@ input BusinessPersistInput {
 }
 
 input BusinessGeneralInfoInput {
-  "Business ID (NIT, CC, ...)"
-  businessId: String!,
+  "Document Type (FOREIGN ID, CITIZENSHIP_CARD, VAT, ...)"
+  documentType: String!,
+  "Document ID"
+  documentId: String!,
   "Business name"
   name: String!,
   "Business type (NATURAL, LEGAL)"
@@ -44,8 +46,10 @@ type Business {
 }
 
 type GeneralInfo {
-  "Business ID (NIT, CC, ...)"
-  businessId: String!,
+  "Document Type (FOREIGN ID, CITIZENSHIP_CARD, VAT, ...)"
+  documentType: DocumentType!
+  "document ID"
+  documentId: String!,
   "Business name"
   name: String!,
   "Business type (NATURAL, LEGAL)"
@@ -61,6 +65,14 @@ type BusinessAttributes {
   key: String,
   "Value"
   value: String
+}
+
+
+enum DocumentType {
+  CITIZENSHIP_CARD
+  PASSPORT
+  FOREIGNER_ID
+  VAT
 }
 
 enum BusinessType {

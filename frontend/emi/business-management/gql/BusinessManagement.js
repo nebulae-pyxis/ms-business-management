@@ -8,7 +8,8 @@ export const getBusinesses = gql`
   getBusinesses(page: $page, count: $count, filter: $filterText, sortColumn: $sortColumn, sortOrder: $sortOrder){
     _id
     generalInfo {
-      businessId
+      documentType
+      documentId
       name
       type      
       email
@@ -31,7 +32,8 @@ export const subscribeBusinessUpdatedSubscription = gql`
     BusinessUpdatedSubscription{
       _id
       generalInfo{
-        businessId
+        documentType
+        documentId
         name
         type
         email

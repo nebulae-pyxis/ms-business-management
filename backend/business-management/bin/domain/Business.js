@@ -113,7 +113,8 @@ class Business {
     if (
       !business ||
       !business.generalInfo ||
-      !business.generalInfo.businessId ||
+      !business.generalInfo.documentType ||
+      !business.generalInfo.documentId ||
       !business.generalInfo.name ||
       !business.generalInfo.type
     ) {
@@ -134,7 +135,8 @@ class Business {
       "BusinessManagement",
       "createBusiness$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
-      "Permission denied"
+      "Permission denied",
+      ["business-manager"]
     )
       .mergeMap(val => {
         return BusinessDA.findBusinessName$(
@@ -188,6 +190,7 @@ class Business {
     if (
       !id ||
       !generalInfo ||
+      !generalInfo.documentType ||
       !generalInfo.businessId ||
       !generalInfo.name ||
       !generalInfo.type
@@ -380,6 +383,9 @@ class Business {
   //#endregion
 }
 
+/**
+ * @returns {Business}
+ */
 module.exports = () => {
   if (!instance) {
     instance = new Business();

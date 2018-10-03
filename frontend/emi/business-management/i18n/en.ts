@@ -2,8 +2,13 @@ export const locale = {
   lang: 'en',
   data: {
     BUSINESS: {
-      ID_SYSTEM: "System ID",
-      ID: "ID",
+      ID_SYSTEM: "ID",
+      DOCUMENT_TYPE: "Document type",
+      DOCUMENT_ID: "Document ID number",
+      CITIZENSHIP_CARD: "Citizenship card",
+      FOREIGNER_ID: "Foreigner ID",
+      VAT: "VAT",
+      PASSPORT: "Pasaporte",
       TYPE: "Nature of the agent",
       BUSINESS: "Agent",
       NAME: "Name",

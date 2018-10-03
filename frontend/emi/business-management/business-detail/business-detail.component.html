@@ -28,10 +28,22 @@
                 </mat-form-field>
 
                 <mat-form-field class="w-100-p">
-                  <input matInput name="id" formControlName="id" [(ngModel)]="selectedBusiness.generalInfo.businessId" placeholder="{{'BUSINESS.ID' | translate}}"
+                  <mat-select placeholder="{{'BUSINESS.DOCUMENT_TYPE' | translate}}" formControlName="documentType" [(value)]="selectedBusiness.generalInfo.documentType">
+                    <mat-option value="CITIZENSHIP_CARD">{{ 'BUSINESS.CITIZENSHIP_CARD' | translate }}</mat-option>
+                    <mat-option value="FOREIGNER_ID">{{ 'BUSINESS.FOREIGNER_ID' | translate }}</mat-option>
+                    <mat-option value="PASSPORT">{{ 'BUSINESS.PASSPORT' | translate }}</mat-option>
+                    <mat-option value="VAT">{{ 'BUSINESS.VAT' | translate }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="businessForm.hasError('required', ['documentType'])">
+                    {{'BUSINESS.DOCUMENT_TYPE_REQUIRED' | translate}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100-p">
+                  <input matInput name="documentId" formControlName="documentId" [(ngModel)]="selectedBusiness.generalInfo.documentId" placeholder="{{'BUSINESS.DOCUMENT_ID' | translate}}"
                     required>
-                  <mat-error *ngIf="businessForm.hasError('required', 'id')">
-                    {{'BUSINESS.ID_IS' | translate}}
+                  <mat-error *ngIf="businessForm.hasError('required', 'documentId')">
+                    {{'BUSINESS.DOCUMENT_ID_IS' | translate}}
                     <strong>{{'BUSINESS.REQUIRED' | translate}}</strong>
                   </mat-error>
                 </mat-form-field>
