@@ -47,7 +47,7 @@ type Business {
 
 type GeneralInfo {
   "Document Type (FOREIGN ID, CITIZENSHIP_CARD, VAT, ...)"
-  documentType: DocumentType!
+  documentType: BusinessDocumentType!
   "document ID"
   documentId: String!,
   "Business name"
@@ -68,7 +68,7 @@ type BusinessAttributes {
 }
 
 
-enum DocumentType {
+enum BusinessDocumentType {
   CITIZENSHIP_CARD
   PASSPORT
   FOREIGNER_ID
