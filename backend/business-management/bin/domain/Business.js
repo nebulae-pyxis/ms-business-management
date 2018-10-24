@@ -184,6 +184,11 @@ class Business {
    * @param {string} jwt JWT token
    */
   updateBusinessGeneralInfo$(data, authToken) {
+
+    console.log(` ========= updateBusinessGeneralInfo$ ========= `);
+    console.log(`data=${JSON.stringify(data)}  ;;; authToken=${JSON.stringify(authToken)} `);
+    
+
     const id = !data.args ? undefined : data.args.id;
     const generalInfo = !data.args ? undefined : data.args.input;
 
