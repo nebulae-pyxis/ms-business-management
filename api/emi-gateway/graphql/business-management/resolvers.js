@@ -19,7 +19,6 @@ function getResponseFromBackEnd$(response) {
       err.name = "Error";
       err.message = resp.result.error;
       Error.captureStackTrace(err, "Error");
-
       throw err;
     }
     return resp.data;
