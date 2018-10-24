@@ -94,7 +94,7 @@ class GraphQlService {
         Rx.Observable.of(message)
           .map(message => ({ authToken: jsonwebtoken.verify(message.data.jwt, jwtPublicKey), message, failedValidations: [] }))
           .catch(err =>
-            cronjobs.errorHandler$(err)
+            business.handleError$(err)
               .map(response => ({
                 errorResponse: { response, correlationId: message.id, replyTo: message.attributes.replyTo },
                 failedValidations: ['JWT']
