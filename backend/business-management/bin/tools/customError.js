@@ -1,3 +1,5 @@
+const INTERNAL_SERVER_ERROR_CODE = 15001;
+
 /**
  * class to emcapsulute diferent errors.
  */

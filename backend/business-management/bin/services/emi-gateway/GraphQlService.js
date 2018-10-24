@@ -79,7 +79,7 @@ class GraphQlService {
         replyTo
           ? broker.send$(replyTo, "gateway.graphql.Query.response", response, { correlationId })
           : Rx.Observable.of(undefined)
-      )
+      );
   }
 
   /**
