@@ -25,7 +25,7 @@ _This MicroService is built on top of NebulaE MicroService Framework.  Please se
 ├── frontend                            => Micro-FrontEnd  
 │   └── emi                             => Micro-FrontEnd for [emi FrontEnd](https://github.com/nebulae-pyxis/emi)
 ├── api                                 => Micro-APIs  
-│   └── gateway                         => Micro-API for [gateway API](https://github.com/nebulae-pyxis/gateway)  
+│   └── emi-gateway                         => Micro-API for [emi-gateway API](https://github.com/nebulae-pyxis/emi-gateway)  
 ├── backend                             => Micro-BackEnds  
 │   ├── business-management             => Micro-BackEnd responsible for ...
 ├── etc                                 => Micro-Service config Files.  
@@ -73,9 +73,9 @@ Exposed interfaces to send Commands and Queries by the CQRS principles.
 The MicroService exposes its interfaces as Micro-APIs that are nested on the general API.
 
 ## GraphQL throught gateway API <a name="api_gateway_graphql"></a>
-These are the exposed GraphQL functions throught the [gateway API](https://github.com/nebulae-pyxis/gateway).  
+These are the exposed GraphQL functions throught the [emi-gateway API](https://github.com/nebulae-pyxis/emi-gateway).  
 
-Note: You may find the GraphQL schema [here](api/gateway/graphql/business-management/schema.gql)
+Note: You may find the GraphQL schema [here](api/emi-gateway/graphql/business-management/schema.gql)
 
 ### GraphQL Enums
 
@@ -361,9 +361,9 @@ Add the **business-manager**, **developer** and **operator** rol to your user:
 nebulae compose-ui development --shell-type=FUSE2_ANGULAR --shell-repo=https://github.com/nebulae-pyxis/emi --frontend-id=emi --output-dir=/FULL_PATH_TO_REPO/ms-business-management/playground/emi  --setup-file=/FULL_PATH_TO_REPO/ms-business-management/etc/mfe-setup.json
 ```
 
-### 6. Compose the API gateway
+### 6. Compose the API emi-gateway
 ```
-nebulae compose-api development --api-type=NEBULAE_GATEWAY --api-repo=https://github.com/nebulae-pyxis/gateway --api-id=gateway --output-dir=FULL_PATH_TO_REPO/ms-business-management/playground/gateway  --setup-file=FULL_PATH_TO_REPO/ms-business-management/etc/mapi-setup.json
+nebulae compose-api development --api-type=NEBULAE_GATEWAY --api-repo=https://github.com/nebulae-pyxis/emi-gateway --api-id=emi-gateway --output-dir=FULL_PATH_TO_REPO/ms-business-management/playground/emi-gateway  --setup-file=FULL_PATH_TO_REPO/ms-business-management/etc/mapi-setup.json
 ```
 
 ### 7. Set the JWT token 
@@ -371,10 +371,10 @@ nebulae compose-api development --api-type=NEBULAE_GATEWAY --api-repo=https://gi
 * select the DEV_PYXIS keycloak realm and click on 'realm settings' in left panel
 * select keys option tab
 * click on 'public key' from the RSA key and copy the contents.
-* set this key value to the **JWT_PUBLIC_KEY** atribute in the following files: *WORKING_FOLDER*/ms-business-management/backend/business-management/.env   *WORKING_FOLDER*/ms-business-management/playground/gateway/.env  
+* set this key value to the **JWT_PUBLIC_KEY** atribute in the following files: *WORKING_FOLDER*/ms-business-management/backend/business-management/.env   *WORKING_FOLDER*/ms-business-management/playground/emi-gateway/.env  
 Note: use the following format: ```JWT_PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\nPUT_HERE_JWT_PUBLIC_KEY_VALUE\n-----END PUBLIC KEY-----```
 * Setup the Apollo engine key to trace API requests
-    * create a key at https://engine.apollographql.com/ and set it to the **APOLLO_ENGINE_API_KEY** atribute in the playground/gateway/.env file
+    * create a key at https://engine.apollographql.com/ and set it to the **APOLLO_ENGINE_API_KEY** atribute in the playground/emi-gateway/.env file
 
 ### 8. Remove FrontEnd base href used on production
 change ```<base href="/emi/">``` to ```<base href="/">``` in the index.html located at playground/emi/src/index.html
@@ -392,9 +392,9 @@ cd backend/business-management/
 npm install
 npm start
 ```
-3. Start the API gateway
+3. Start the API emi-gateway
 ```
-cd playground/gateway
+cd playground/emi-gateway
 npm run start-dev-env
 ```
 4. Start the FrontEnd

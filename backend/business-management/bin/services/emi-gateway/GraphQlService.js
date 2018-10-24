@@ -61,7 +61,7 @@ class GraphQlService {
         if (replyTo) {
           return broker.send$(
             replyTo,
-            "gateway.graphql.Query.response",
+            "emigateway.graphql.Query.response",
             response,
             { correlationId }
           );
@@ -120,43 +120,43 @@ class GraphQlService {
     return [
       {
         aggregateType: "Business",
-        messageType: "gateway.graphql.mutation.persistBusiness",
+        messageType: "emigateway.graphql.mutation.persistBusiness",
         onErrorHandler,
         onCompleteHandler
       },
       {
         aggregateType: "Business",
-        messageType: "gateway.graphql.mutation.updateBusinessGeneralInfo",
+        messageType: "emigateway.graphql.mutation.updateBusinessGeneralInfo",
         onErrorHandler,
         onCompleteHandler
       },
       {
         aggregateType: "Business",
-        messageType: "gateway.graphql.mutation.updateBusinessAttributes",
+        messageType: "emigateway.graphql.mutation.updateBusinessAttributes",
         onErrorHandler,
         onCompleteHandler
       },
       {
         aggregateType: "Business",
-        messageType: "gateway.graphql.mutation.updateBusinessState",
+        messageType: "emigateway.graphql.mutation.updateBusinessState",
         onErrorHandler,
         onCompleteHandler
       },
       {
         aggregateType: "Business",
-        messageType: "gateway.graphql.query.getBusinessCount",
+        messageType: "emigateway.graphql.query.getBusinessCount",
         onErrorHandler,
         onCompleteHandler
       },
       {
         aggregateType: "Business",
-        messageType: "gateway.graphql.query.getBusiness",
+        messageType: "emigateway.graphql.query.getBusiness",
         onErrorHandler,
         onCompleteHandler
       },
       {
         aggregateType: "Business",
-        messageType: "gateway.graphql.query.getBusinesses",
+        messageType: "emigateway.graphql.query.getBusinesses",
         onErrorHandler,
         onCompleteHandler
       }
@@ -168,31 +168,31 @@ class GraphQlService {
    */
   generateFunctionMap() {    
     return {
-      'gateway.graphql.mutation.persistBusiness': {
+      'emigateway.graphql.mutation.persistBusiness': {
         fn: business.createBusiness$,
         obj: business
       },
-      'gateway.graphql.mutation.updateBusinessGeneralInfo': {
+      'emigateway.graphql.mutation.updateBusinessGeneralInfo': {
         fn: business.updateBusinessGeneralInfo$,
         obj: business
       },
-      'gateway.graphql.mutation.updateBusinessAttributes': {
+      'emigateway.graphql.mutation.updateBusinessAttributes': {
         fn: business.updateBusinessAttributes$,
         obj: business
       },
-      'gateway.graphql.mutation.updateBusinessState': {
+      'emigateway.graphql.mutation.updateBusinessState': {
         fn: business.changeBusinessState$,
         obj: business
       },
-      'gateway.graphql.query.getBusinessCount': {
+      'emigateway.graphql.query.getBusinessCount': {
         fn: business.getBusinessCount$,
         obj: business
       },
-      'gateway.graphql.query.getBusiness': {
+      'emigateway.graphql.query.getBusiness': {
         fn: business.getBusiness$,
         obj: business
       },
-      'gateway.graphql.query.getBusinesses': {
+      'emigateway.graphql.query.getBusinesses': {
         fn: business.getBusinesses$,
         obj: business
       },

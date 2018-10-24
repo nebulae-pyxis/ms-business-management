@@ -2,7 +2,7 @@
     {
         "name": "business-management",
         "type": "graphql",        
-        "src": "api/gateway/graphql/business-management",
+        "src": "api/emi-gateway/graphql/business-management",
         "preBuildCommands": []
     }
 ]

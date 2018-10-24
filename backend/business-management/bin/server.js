@@ -8,7 +8,7 @@ const eventSourcing = require('./tools/EventSourcing')();
 const eventStoreService = require('./services/event-store/EventStoreService')();
 const mongoDB = require('./data/MongoDB').singleton();
 const BusinessDA = require('./data/BusinessDA');
-const graphQlService = require('./services/gateway/GraphQlService')();
+const graphQlService = require('./services/emi-gateway/GraphQlService')();
 const Rx = require('rxjs');
 
 const start = () => {

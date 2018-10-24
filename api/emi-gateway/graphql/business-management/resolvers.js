@@ -61,7 +61,7 @@ module.exports = {
         .mergeMap(response => {
           return broker.forwardAndGetReply$(
             "Business",
-            "gateway.graphql.query.getBusiness",
+            "emigateway.graphql.query.getBusiness",
             { root, args, jwt: context.encodedToken },
             2000
           );
@@ -82,7 +82,7 @@ module.exports = {
         .mergeMap(response => {
           return broker.forwardAndGetReply$(
             "Business",
-            "gateway.graphql.query.getBusinesses",
+            "emigateway.graphql.query.getBusinesses",
             { root, args, jwt: context.encodedToken },
             2000
           );
@@ -103,7 +103,7 @@ module.exports = {
         .mergeMap(response => {
           return broker.forwardAndGetReply$(
             "Business",
-            "gateway.graphql.query.getBusinessCount",
+            "emigateway.graphql.query.getBusinessCount",
             { root, args, jwt: context.encodedToken },
             2000
           );
@@ -128,7 +128,7 @@ module.exports = {
         .mergeMap(response => {
           return context.broker.forwardAndGetReply$(
             "Business",
-            "gateway.graphql.mutation.persistBusiness",
+            "emigateway.graphql.mutation.persistBusiness",
             { root, args, jwt: context.encodedToken },
             2000
           );
@@ -149,7 +149,7 @@ module.exports = {
         .mergeMap(response => {
           return context.broker.forwardAndGetReply$(
             "Business",
-            "gateway.graphql.mutation.updateBusinessGeneralInfo",
+            "emigateway.graphql.mutation.updateBusinessGeneralInfo",
             { root, args, jwt: context.encodedToken },
             2000
           );
@@ -170,7 +170,7 @@ module.exports = {
         .mergeMap(response => {
           return context.broker.forwardAndGetReply$(
             "Business",
-            "gateway.graphql.mutation.updateBusinessAttributes",
+            "emigateway.graphql.mutation.updateBusinessAttributes",
             { root, args, jwt: context.encodedToken },
             2000
           );
@@ -191,7 +191,7 @@ module.exports = {
         .mergeMap(response => {
           return context.broker.forwardAndGetReply$(
             "Business",
-            "gateway.graphql.mutation.updateBusinessState",
+            "emigateway.graphql.mutation.updateBusinessState",
             { root, args, jwt: context.encodedToken },
             2000
           );
