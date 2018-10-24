@@ -196,7 +196,7 @@ class Business {
       !id ||
       !generalInfo ||
       !generalInfo.documentType ||
-      !generalInfo.businessId ||
+      !generalInfo.documentId ||
       !generalInfo.name ||
       !generalInfo.type
     ) {

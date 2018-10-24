@@ -58,7 +58,7 @@ describe("Business Data Access", function() {
         data: {
           id: businessUuid,
           generalInfo: { 
-            businessId: "012345678", 
+            documentId: "012345678", 
             name: "TestBusiness",
             type: "LEGAL",
             email: "esteban.zapata@nebulae.com.co",
@@ -80,7 +80,7 @@ describe("Business Data Access", function() {
           assert.equal(businessCreated._id, businessUuid, "Business ID");
 
           assert.deepEqual(businessCreated.generalInfo, { 
-            businessId: "012345678", 
+            documentId: "012345678", 
             name: "TestBusiness",
             type: "LEGAL",
             email: "esteban.zapata@nebulae.com.co",
@@ -112,7 +112,7 @@ describe("Business Data Access", function() {
         data: {
           id: businessUuid,
           generalInfo: { 
-            businessId: "876543210", 
+            documentId: "876543210", 
             name: "businessNameUpdated",
             type: "NATURAL",
             email: "esteban@nebulae.com.co",
@@ -135,7 +135,7 @@ describe("Business Data Access", function() {
           assert.equal(businessUpdated._id, businessUuid, "Business ID");
 
           assert.deepEqual(businessUpdated.generalInfo, { 
-            businessId: "876543210", 
+            documentId: "876543210", 
             name: "businessNameUpdated",
             type: "NATURAL",
             email: "esteban@nebulae.com.co",
@@ -181,7 +181,7 @@ describe("Business Data Access", function() {
           assert.equal(businessUpdated._id, businessUuid, "Business ID");
 
           assert.deepEqual(businessUpdated.generalInfo, { 
-            businessId: "876543210", 
+            documentId: "876543210", 
             name: "businessNameUpdated",
             type: "NATURAL",
             email: "esteban@nebulae.com.co",
@@ -228,7 +228,7 @@ describe("Business Data Access", function() {
           assert.equal(businessUpdated._id, businessUuid, "Business ID");
 
           assert.deepEqual(businessUpdated.generalInfo, { 
-            businessId: "876543210", 
+            documentId: "876543210", 
             name: "businessNameUpdated",
             type: "NATURAL",
             email: "esteban@nebulae.com.co",

@@ -62,7 +62,7 @@ class BusinessDA {
       filterObject = {
         $or: [
           { 'generalInfo.name': { $regex: `${filter}.*`, $options: "i" } },
-          { 'generalInfo.businessId': { $regex: `${filter}.*`, $options: "i" } }
+          { 'generalInfo.documentId': { $regex: `${filter}.*`, $options: "i" } }
         ]
       };
     }

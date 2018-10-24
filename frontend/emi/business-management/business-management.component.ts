@@ -252,7 +252,7 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
       if (sort.active == "name") {
         this.sortColumn = "generalInfo.name";
       } else if (sort.active == "ID") {
-        this.sortColumn = "generalInfo.businessId";
+        this.sortColumn = "generalInfo.documentId";
       }
     } else {
       this.sortOrder = null;
