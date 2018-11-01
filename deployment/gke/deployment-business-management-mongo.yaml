@@ -45,6 +45,10 @@ spec:
         volumeMounts:
         - name: bus-mgmt-mongo-persistent-storage
           mountPath: /data/db
+        resources:
+            requests:
+              cpu: 50m
+              memory: 100Mi
       volumes:
       - name: bus-mgmt-mongo-persistent-storage
         persistentVolumeClaim:
