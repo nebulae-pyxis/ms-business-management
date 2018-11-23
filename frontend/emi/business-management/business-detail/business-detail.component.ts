@@ -11,6 +11,7 @@ import {
 import { BusinessDialogComponent } from "./business-dialog/business-dialog.component";
 import { BusinessDetailService } from "./business-detail.service";
 import { TranslateService } from "@ngx-translate/core";
+import { FuseTranslationLoaderService } from './../../../../core/services/translation-loader.service';
 
 ////////// ANGULAR MATERIAL //////////
 import { MatDialog, MatSnackBar } from "@angular/material";
@@ -40,6 +41,7 @@ export class BusinessDetailComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private businessDetailService: BusinessDetailService,
+    private translationLoader: FuseTranslationLoaderService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private translate: TranslateService,
@@ -66,7 +68,7 @@ export class BusinessDetailComponent implements OnInit {
   set businessDetailAction(businessDetailAction: any) {
     this._businessDetailAction = businessDetailAction;
     this.addNewBusiness = businessDetailAction == "ADD";
-    console.log('addNewBusiness => ', this.addNewBusiness);
+    // console.log('addNewBusiness => ', this.addNewBusiness);
     this.selectedBusiness = {
       generalInfo: {},
       active: false
@@ -139,7 +141,8 @@ export class BusinessDetailComponent implements OnInit {
               filter((resp: any) => !resp.errors || resp.errors.length === 0),
             )
             .subscribe(model => {
-              this.snackBar.open("El agente ha sido creada", "Cerrar", {
+              this.snackBar.open(this.translationLoader.getTranslate().instant('BUSINESS.BUSINESS_CREATED'), 
+              this.translationLoader.getTranslate().instant('BUSINESS.CLOSE'), {
                 duration: 2000
               });
               this.businessCreated.emit(this.selectedBusiness);
@@ -210,7 +213,9 @@ export class BusinessDetailComponent implements OnInit {
               filter((resp: any) => !resp.errors || resp.errors.length === 0),
             ).subscribe(
               model => {
-                this.snackBar.open('Agente ha sido editado', 'Cerrar', {
+                this.snackBar.open(this.translationLoader.getTranslate().instant('BUSINESS.BUSINESS_UPDATED'), 
+                this.translationLoader.getTranslate().instant('BUSINESS.CLOSE'), 
+                {
                   duration: 2000
                 });
                 this.selectedBusinessWithoutChanges = JSON.parse(
@@ -256,9 +261,12 @@ export class BusinessDetailComponent implements OnInit {
         filter((resp: any) => !resp.errors || resp.errors.length === 0),
       ).subscribe(
         model => {
-          this.snackBar.open("atributos han sido editados", "Cerrar", {
-            duration: 2000
-          });
+          this.snackBar.open(
+            this.translationLoader.getTranslate().instant('BUSINESS.ATTRIBUTES_UPDATED'), 
+            this.translationLoader.getTranslate().instant('BUSINESS.CLOSE'), 
+            {
+              duration: 2000
+            });
           this.selectedBusiness.attributes = attributesList;
           this.selectedBusinessWithoutChanges = JSON.parse(
             JSON.stringify(this.selectedBusiness)

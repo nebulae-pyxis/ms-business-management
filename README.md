@@ -344,10 +344,10 @@ docker-compose up
 * set a password by editing the user, open the 'credentials' tabs, type a new password and deselect the 'Temporary' option
 
 
-Add the **business-manager**, **developer** and **operator** rol to your user:
+Add the **platform-admin**, **developer** and **operator** rol to your user:
 * select user option in the left panel and click on your user id.
 * select the 'role mapping' tab
-* select **business-manager**, **developer** and **operator** options from available roles and click on add selected
+* select **platform-admin**, **developer** and **operator** options from available roles and click on add selected
 
 ### 4. Create PlayGround folder
    PlayGround is a directory where we are going to place the FrontEnd and API shells so the developer can run tests

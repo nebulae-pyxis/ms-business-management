@@ -12,7 +12,7 @@ import { MatDialog, MatSnackBar } from "@angular/material";
 import { TableDataSource, ValidatorService } from 'angular4-material-table';
 
 ////////// RXJS ///////////
-import { first, filter } from "rxjs/operators";
+import { first, filter, map } from "rxjs/operators";
 
 ////////// COMPONENTS AND SERVICES //////////
 import { BusinessAttributesValidatorService } from './business-attributes-validator.service';
@@ -69,8 +69,13 @@ export class BusinessAttributesComponent implements OnInit {
     if (businessIdValue) {
       this.businessDetailService
         .getBusinessDetail$(businessIdValue)
-        .pipe(first())
-        .subscribe(model => {
+        .pipe(
+          first(),
+          map(res => {
+            return res.data.getBusiness;
+          })
+        )
+        .subscribe(model => {         
           this.selectedBusiness = JSON.parse(JSON.stringify(model));
           this.businessAttributeList = this.selectedBusiness.attributes ? this.selectedBusiness.attributes: [];
           this.dataSource = new TableDataSource<any>(this.businessAttributeList, Attribute, this.businessAttributesValidatorService);

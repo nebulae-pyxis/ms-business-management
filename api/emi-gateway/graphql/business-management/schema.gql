@@ -94,6 +94,10 @@ type Query {
   getBusinesses(page: Int!, count: Int!, filter: String, sortColumn: String, sortOrder: String): [Business]
   "Gets the amount of businesses"
   getBusinessCount: Int
+  "Gets the businesses by id or name. If limit is applied the query will be limited to the amount defined"
+  getBusinessByFilterText(filterText: String, limit: Int): [Business]
+  "Returns the business to which the user belongs"
+  myBusiness: Business
 }
 
 type Mutation {

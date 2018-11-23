@@ -1,6 +1,6 @@
 const Rx = require('rxjs');
 const broker = require('../tools/broker/BrokerFactory')();
-const MATERIALIZED_VIEW_TOPIC = "emi-materialized-view-updates";
+const MATERIALIZED_VIEW_TOPIC = "emi-gateway-materialized-view-updates";
 const BusinessDA = require('../data/BusinessDA');
 
 let instance;

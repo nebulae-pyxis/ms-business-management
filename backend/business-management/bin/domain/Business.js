@@ -7,7 +7,7 @@ const eventSourcing = require("../tools/EventSourcing")();
 const RoleValidator = require("../tools/RoleValidator");
 const Event = require("@nebulae/event-store").Event;
 const uuidv4 = require("uuid/v4");
-const MATERIALIZED_VIEW_TOPIC = "emi-materialized-view-updates";
+const MATERIALIZED_VIEW_TOPIC = "emi-gateway-materialized-view-updates";
 const {
   CustomError,
   DefaultError,
@@ -26,6 +26,54 @@ let instance;
 class Business {
   constructor() {}
 
+ /**
+   * Gets the business where the user that is performing the request belong
+   *
+   * @param {*} args args
+   * @param {*} args.businessId business ID
+   */
+  getBusinessByFilter$({ args }, authToken) {
+    return RoleValidator.checkPermissions$(
+      authToken.realm_access.roles,
+      "BusinessManagement",
+      "getBusinessByFilter$",
+      BUSINESS_PERMISSION_DENIED_ERROR_CODE,
+      "Permission denied",
+      ["SYSADMIN", "platform-admin"]
+      )
+      .mergeMap(roles => BusinessDA.getBusinessByFilter$(args.filterText, args.limit))          
+      .toArray()
+      .mergeMap(rawResponse => this.buildSuccessResponse$(rawResponse))
+      .catch(err => {
+        return this.handleError$(err);
+      });
+  }
+
+    /**
+   * Gets the business where the user that is performing the request belong
+   *
+   * @param {*} args args
+   * @param {*} args.businessId business ID
+   */
+  getMyBusiness$({ args }, authToken) {
+    return RoleValidator.checkPermissions$(
+      authToken.realm_access.roles,
+      "BusinessManagement",
+      "getMyBusiness$",
+      BUSINESS_PERMISSION_DENIED_ERROR_CODE,
+      "Permission denied",
+      ["SYSADMIN", "business-owner", "POS", "platform-admin"]
+      )
+      .mergeMap(roles => {
+        const businessId = authToken.businessId || '';
+        return BusinessDA.getBusiness$(businessId);
+       })
+      .mergeMap(rawResponse => this.buildSuccessResponse$(rawResponse))
+      .catch(err => {
+        return this.handleError$(err);
+      });
+  }
+
   /**
    * Gets the business according to the ID passed by args.
    *
@@ -42,7 +90,7 @@ class Business {
       "changeBusinessState$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["business-manager"]
+      ["SYSADMIN", "platform-admin"]
     )
       .mergeMap(val => {
         return BusinessDA.getBusiness$(args.id);
@@ -66,7 +114,7 @@ class Business {
       "getBusinesses$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["business-manager"]
+      ["SYSADMIN", "platform-admin"]
     )
       .mergeMap(val => {
         return BusinessDA.getBusinesses$(
@@ -93,7 +141,7 @@ class Business {
       "getBusinessCount$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["business-manager"]
+      ["SYSADMIN", "platform-admin"]
     )
       .mergeMap(val => {
         return BusinessDA.getBusinessCount$();
@@ -136,7 +184,7 @@ class Business {
       "createBusiness$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["business-manager"]
+      ["SYSADMIN", "platform-admin"]
     )
       .mergeMap(val => {
         return BusinessDA.findBusinessName$(
@@ -149,8 +197,7 @@ class Business {
                 "BusinessManagement",
                 "createBusiness$()",
                 BUSINESS_NAME_EXISTS_ERROR_CODE,
-                "Business name exists",
-                ["business-manager"]
+                "Business name exists"
               )
             );
           }
@@ -185,8 +232,8 @@ class Business {
    */
   updateBusinessGeneralInfo$(data, authToken) {
 
-    console.log(` ========= updateBusinessGeneralInfo$ ========= `);
-    console.log(`data=${JSON.stringify(data)}  ;;; authToken=${JSON.stringify(authToken)} `);
+    //console.log(` ========= updateBusinessGeneralInfo$ ========= `);
+    //console.log(`data=${JSON.stringify(data)}  ;;; authToken=${JSON.stringify(authToken)} `);
     
 
     const id = !data.args ? undefined : data.args.id;
@@ -217,7 +264,7 @@ class Business {
       "updateBusinessGeneralInfo$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["business-manager"]
+      ["SYSADMIN", "platform-admin"]
     )
       .mergeMap(val => {
         return BusinessDA.findBusinessName$(id, generalInfo.name).mergeMap(
@@ -283,7 +330,7 @@ class Business {
       "updateBusinessAttributes$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["business-manager"]
+      ["SYSADMIN", "platform-admin"]
     )
       .mergeMap(val => {
         return eventSourcing.eventStore.emitEvent$(
@@ -333,7 +380,7 @@ class Business {
       "changeBusinessState$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["business-manager"]
+      ["SYSADMIN", "platform-admin"]
     )
       .mergeMap(val => {
         return eventSourcing.eventStore.emitEvent$(

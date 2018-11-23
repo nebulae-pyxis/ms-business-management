@@ -38,8 +38,8 @@
     <!-- CONTENT CARD -->
     <div class="content-card mat-white-bg">
 
-      <div fxLayout="column" style="width: 100%; justify-content: space-between" fxLayout.gt-sm="row">
-        <div fxLayout="column" fxFlex="100" fxFlex.gt-sm="100" fxFlex.gt-md="100">
+      <div fxLayout="column" fxLayout.gt-sm="row">
+        <div fxLayout="column" fxFlex="100">
           <mat-table class="business-table" #table (matSortChange)="sortData($event)" [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}"
             fusePerfectScrollbar>
 
@@ -98,7 +98,7 @@
 
         <!-- BUSINESS DETAIL -->
 
-        <app-business-detail *ngIf="selectedBusiness" businessId="{{selectedBusiness._id}}" businessDetailAction="{{businessDetailAction}}" (businessCreated)="onBusinessCreated($event)" (closeBusinessDetail)="closeBusinessDetail($event)"></app-business-detail>
+        <app-business-detail fxFlex="30" *ngIf="selectedBusiness" businessId="{{selectedBusiness._id}}" businessDetailAction="{{businessDetailAction}}" (businessCreated)="onBusinessCreated($event)" (closeBusinessDetail)="closeBusinessDetail($event)"></app-business-detail>
 
         <!-- / BUSINESS DETAIL -->
 

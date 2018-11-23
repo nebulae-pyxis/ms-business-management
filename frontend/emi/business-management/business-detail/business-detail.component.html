@@ -1,6 +1,6 @@
-<fuse-widget fxLayout="column" fxFlex="100" fxFlex.gt-xs="90" fxFlex.gt-md="90" fusePerfectScrollbar>
+<fuse-widget fxLayout="column" fxFlex="100" fusePerfectScrollbar>
   <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
-    <div class="pl-16 pr-8 py-16" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="pl-16 pr-8" fxLayout="row" fxLayoutAlign="space-between center">
       <div class="h1 font-weight-300">{{'BUSINESS.BUSINESS_DETAIL' | translate}}</div>
 
       <button mat-icon-button aria-label="more" (click)="closeDetail()">
@@ -79,14 +79,15 @@
                 </mat-form-field>
 
                 <mat-checkbox class="example-margin" formControlName="active" [(ngModel)]="selectedBusiness.state">{{'BUSINESS.ACTIVE' | translate}}</mat-checkbox>
-              
+                              
+                <button mat-button color="accent" *ngIf="!addNewBusiness" [routerLink]="'/user-management/'+selectedBusiness._id">{{'BUSINESS.MANAGE_USER' | translate}}</button>
           </div>
           
           <div class="mt-16">
             <button mat-raised-button *ngIf="addNewBusiness" (click)="createBusiness()" [disabled]="businessForm.invalid || businessForm.pristine">{{'BUSINESS.CREATE' | translate}}</button>
             <button mat-raised-button *ngIf="!addNewBusiness && selectedBusiness._id" (click)="updateBusiness()" [disabled]="businessForm.invalid || businessForm.pristine">{{'BUSINESS.SAVE' | translate}}</button>
-            <button mat-raised-button *ngIf="false" (click)="removeBusiness()" color="warn">{{'BUSINESS.DELETE' | translate}}</button>
           </div>
+
         </mat-tab>
         <mat-tab label="{{'BUSINESS.ATTRIBUTES' | translate}}" *ngIf="!addNewBusiness && selectedBusiness._id">            
             <div  class="w-100-p">

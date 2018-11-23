@@ -174,7 +174,19 @@ class GraphQlService {
         messageType: "emigateway.graphql.query.getBusinesses",
         onErrorHandler,
         onCompleteHandler
-      }
+      },
+      {
+        aggregateType: "Business",
+        messageType: "emigateway.graphql.query.getBusinessByFilterText",
+        onErrorHandler,
+        onCompleteHandler
+      },
+      {
+        aggregateType: "Business",
+        messageType: "emigateway.graphql.query.myBusiness",
+        onErrorHandler,
+        onCompleteHandler
+      },
     ];
   }
 
@@ -211,8 +223,14 @@ class GraphQlService {
         fn: business.getBusinesses$,
         obj: business
       },
-
-
+      "emigateway.graphql.query.getBusinessByFilterText": {
+        fn: business.getBusinessByFilter$,
+        obj: business
+      },
+      "emigateway.graphql.query.myBusiness": {
+        fn: business.getMyBusiness$,
+        obj: business
+      },
     };
   }
 

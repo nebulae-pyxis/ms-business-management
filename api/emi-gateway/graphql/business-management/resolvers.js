@@ -48,6 +48,48 @@ function handleError$(err, methodName) {
 module.exports = {
   //// QUERY ///////
   Query: {
+    getBusinessByFilterText(root, args, context) {
+      return RoleValidator.checkPermissions$(
+        context.authToken.realm_access.roles,
+        contextName,
+        "getBusinessByFilterText",
+        BUSINESS_PERMISSION_DENIED_ERROR_CODE,
+        "Permission denied",
+        ["SYSADMIN", "platform-admin"]
+      )
+        .mergeMap(response => {
+          return broker.forwardAndGetReply$(
+            "Business",
+            "emigateway.graphql.query.getBusinessByFilterText",
+            { root, args, jwt: context.encodedToken },
+            2000
+          );
+        })
+        .catch(err => handleError$(err, "getBusinessByFilterText"))
+        .mergeMap(response => getResponseFromBackEnd$(response))
+        .toPromise();
+    },
+    myBusiness(root, args, context) {
+      return RoleValidator.checkPermissions$(
+        context.authToken.realm_access.roles,
+        contextName,
+        "myBusiness",
+        BUSINESS_PERMISSION_DENIED_ERROR_CODE,
+        "Permission denied",
+        ["SYSADMIN", "business-owner", "platform-admin", "POS"]
+      )
+        .mergeMap(response => {
+          return broker.forwardAndGetReply$(
+            "Business",
+            "emigateway.graphql.query.myBusiness",
+            { root, args, jwt: context.encodedToken },
+            2000
+          );
+        })
+        .catch(err => handleError$(err, "myBusiness"))
+        .mergeMap(response => getResponseFromBackEnd$(response))
+        .toPromise();
+  },
     getBusiness(root, args, context) {
       return RoleValidator.checkPermissions$(
         context.authToken.realm_access.roles,
@@ -55,7 +97,7 @@ module.exports = {
         "getBusiness",
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
-        ["business-manager"]
+        ["SYSADMIN", "platform-admin"]
       )
         .mergeMap(response => {
           return broker.forwardAndGetReply$(
@@ -76,7 +118,7 @@ module.exports = {
         "getBusinesses",
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
-        ["business-manager"]
+        ["SYSADMIN", "platform-admin"]
       )
         .mergeMap(response => {
           return broker.forwardAndGetReply$(
@@ -97,7 +139,7 @@ module.exports = {
         "getBusinessCount",
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
-        ["business-manager"]
+        ["SYSADMIN", "platform-admin"]
       )
         .mergeMap(response => {
           return broker.forwardAndGetReply$(
@@ -122,7 +164,7 @@ module.exports = {
         "persistBusiness",
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
-        ["business-manager"]
+        ["SYSADMIN", "platform-admin"]
       )
         .mergeMap(response => {
           return context.broker.forwardAndGetReply$(
@@ -143,7 +185,7 @@ module.exports = {
         "updateBusinessGeneralInfo",
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
-        ["business-manager"]
+        ["SYSADMIN", "platform-admin"]
       )
         .mergeMap(response => {
           return context.broker.forwardAndGetReply$(
@@ -164,7 +206,7 @@ module.exports = {
         "updateBusinessAttributes",
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
-        ["business-manager"]
+        ["SYSADMIN", "platform-admin"]
       )
         .mergeMap(response => {
           return context.broker.forwardAndGetReply$(
@@ -185,7 +227,7 @@ module.exports = {
         "updateBusinessAttributes",
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
-        ["business-manager"]
+        ["SYSADMIN", "platform-admin"]
       )
         .mergeMap(response => {
           return context.broker.forwardAndGetReply$(
@@ -209,7 +251,7 @@ module.exports = {
           //Checks the roles of the user, if the user does not have at least one of the required roles, an error will be thrown
           RoleValidator.checkAndThrowError(
             context.authToken.realm_access.roles, 
-            ["business-manager"], 
+            ["SYSADMIN", "platform-admin"], 
             contextName, 
             "BusinessUpdatedSubscription", 
             BUSINESS_PERMISSION_DENIED_ERROR_CODE, 

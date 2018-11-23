@@ -46,6 +46,37 @@ class BusinessDA {
     return Rx.Observable.defer(() => collection.find({ _id: {$ne: id}, 'generalInfo.name': businessName }).count());
   }
 
+      /**
+     * gets Business according to the filter
+     * @param {string} type 
+     */
+    static getBusinessByFilter$(filterText, limit) {
+      let filter = {};
+      if(filterText){
+          filter['$or'] = [ 
+            { '_id': {$regex: filterText, $options: 'i'} }, 
+            { 'generalInfo.documentId': {$regex: filterText, $options: 'i'} }, 
+            { 'generalInfo.name': {$regex: filterText, $options: 'i'} } 
+          ];
+      }
+
+      return Rx.Observable.create(async observer => {
+          const collection = mongoDB.db.collection(CollectionName);
+          const cursor = collection.find(filter);
+          if (limit) {
+              cursor.limit(limit);
+          }
+
+          let obj = await this.extractNextFromMongoCursor(cursor);
+          while (obj) {
+              observer.next(obj);
+              obj = await this.extractNextFromMongoCursor(cursor);
+          }
+
+          observer.complete();
+      });
+    }
+
   /**
    * gets all the business registered on the system.
    *
@@ -198,6 +229,19 @@ class BusinessDA {
   static getBusinessCount$() {
     const collection = mongoDB.db.collection(CollectionName);
     return Rx.Observable.fromPromise(collection.count());
+  }
+
+      /**
+   * Extracts the next value from a mongo cursor if available, returns undefined otherwise
+   * @param {*} cursor
+   */
+  static async extractNextFromMongoCursor(cursor) {
+    const hasNext = await cursor.hasNext();
+    if (hasNext) {
+      const obj = await cursor.next();
+      return obj;
+    }
+    return undefined;
   }
 }
 

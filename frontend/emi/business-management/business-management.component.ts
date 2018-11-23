@@ -19,14 +19,15 @@ import { fuseAnimations } from "../../../core/animations";
 //////////// RXJS ////////////
 
 import * as Rx from "rxjs/Rx";
-import { of, fromEvent } from "rxjs";
+import { of, fromEvent, Subject } from "rxjs";
 import {
   first,
   filter,
   tap,
   mergeMap,
   debounceTime,
-  distinctUntilChanged
+  distinctUntilChanged,
+  takeUntil
 } from "rxjs/operators";
 import { Subscription } from "rxjs/Subscription";
 
@@ -47,6 +48,7 @@ import { TranslateService } from "@ngx-translate/core";
   animations: fuseAnimations
 })
 export class BusinessManagementComponent implements OnInit, OnDestroy {
+  private ngUnsubscribe = new Subject();
   subscriptions = [];
   //Table data
   dataSource = new MatTableDataSource();
@@ -89,24 +91,23 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
     );
 
     //When a new business is created, updated or deleted is neccesary to add or refresh the element in the table.
-    this.subscriptions.push(
       this.businessManagementervice
         .subscribeBusinessUpdatedSubscription$()
         .pipe(
           mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
           filter((resp: any) => !resp.errors || resp.errors.length === 0),
+          takeUntil(this.ngUnsubscribe)
         )
         .subscribe(result => {
           this.addAndUpdateBusinessToTable(result.data.BusinessUpdatedSubscription, false);
-        })
-    );
+        });
 
     //Creates an observable for the filter in the table
-    this.subscriptions.push(
       fromEvent(this.filter.nativeElement, "keyup")
         .pipe(
           debounceTime(150),
-          distinctUntilChanged()
+          distinctUntilChanged(),
+          takeUntil(this.ngUnsubscribe)
         )
         .subscribe(() => {
           if (this.filter.nativeElement) {
@@ -121,12 +122,14 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
               this.sortOrder
             );
           }
-        })
-    );
+        });
 
     // Creates an observable for listen the events when the paginator of the table is modified
-    this.subscriptions.push(
-      this.paginator.page.subscribe(pageChanged => {
+      this.paginator.page
+      .pipe(
+        takeUntil(this.ngUnsubscribe)
+      )
+      .subscribe(pageChanged => {
         this.page = pageChanged.pageIndex;
         this.count = pageChanged.pageSize;
         this.refreshDataTable(
@@ -136,18 +139,16 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
           this.sortColumn,
           this.sortOrder
         );
-      })
-    );
+      });
 
-    this.subscriptions.push(
       this.businessManagementervice.getBusinessCount$()
       .pipe(
         mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
         filter((resp: any) => !resp.errors || resp.errors.length === 0),
+        takeUntil(this.ngUnsubscribe)
       ).subscribe(result => {
         this.tableSize = result.data.getBusinessCount;
-      })
-    );
+      });
   }
 
   /**
@@ -175,6 +176,7 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
       .pipe(
         mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
         filter((resp: any) => !resp.errors || resp.errors.length === 0),
+        takeUntil(this.ngUnsubscribe)
       ).subscribe(model => {
         this.dataSource.data = model.data.getBusinesses;
       });
@@ -341,5 +343,7 @@ export class BusinessManagementComponent implements OnInit, OnDestroy {
         sub.unsubscribe();
       });
     }
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

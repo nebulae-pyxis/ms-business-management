@@ -19,18 +19,18 @@
                 "id": "business-management",
                 "icon": "business",
                 "translate": {
-                    "en": "Agents",
-                    "es": "Agentes"
+                    "en": "Business unit",
+                    "es": "Unidad de negocio"
                 },
                 "navURL": "/business-management",
                 "path": "business-management",
                 "loadChildren": "./main/content/business-management/business-management.module#BusinessManagementModule",
                 "priority": 3000,
-                "roles" : ["business-manager"],
+                "roles" : ["SYSADMIN","platform-admin"],
                 "default" : false
             }            
         ],
-        "preBuildCommands": ["npm i angular4-material-table@0.2.0"],
+        "preBuildCommands": ["npm i angular4-material-table@0.6.0"],
         "environmentVars": {
         }
     }
