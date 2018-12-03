@@ -79,20 +79,13 @@
 
             <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
 
-            <mat-row *cdkRowDef="let business; columns: displayedColumns;"
-            (click)="selectRow(business)"
-            class="product"
-            [ngClass]="{'highlight': selectedBusiness && selectedBusiness._id == business._id}"
+            <mat-row *cdkRowDef="let business; columns: displayedColumns;" (click)="selectRow(business)" class="product" [ngClass]="{'highlight': selectedBusiness && selectedBusiness._id == business._id}"
               matRipple>
             </mat-row>
 
           </mat-table>
 
-          <mat-paginator #paginator
-          [length]="tableSize"
-          [pageIndex]="0"
-          [pageSize]="10"
-          [pageSizeOptions]="[5, 10, 25, 100]">
+          <mat-paginator #paginator [length]="tableSize" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
           </mat-paginator>
         </div>
 
