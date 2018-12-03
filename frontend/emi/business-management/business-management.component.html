@@ -96,6 +96,7 @@
           </mat-paginator>
         </div>
 
+        
         <!-- BUSINESS DETAIL -->
 
         <app-business-detail fxFlex="30" *ngIf="selectedBusiness" businessId="{{selectedBusiness._id}}" businessDetailAction="{{businessDetailAction}}" (businessCreated)="onBusinessCreated($event)" (closeBusinessDetail)="closeBusinessDetail($event)"></app-business-detail>

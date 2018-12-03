@@ -13,9 +13,22 @@
             "priority": 200
             }
           ],
+          "subgroups": [
+            {
+                "groupId": "BUSINESS_UNIT_MANAGER",
+                "id": "management",
+                "icon": "settings",
+                "translate": {
+                    "en": "Management",
+                    "es": "Gestión"
+                },
+                "priority": 2000
+            }
+        ],
         "contents": [
             {
                 "groupId": "BUSINESS_UNIT_MANAGER",
+                "subgroupId": "management",
                 "id": "business-management",
                 "icon": "business",
                 "translate": {
