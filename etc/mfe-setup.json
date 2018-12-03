@@ -32,8 +32,8 @@
                 "id": "business-management",
                 "icon": "business",
                 "translate": {
-                    "en": "Business unit",
-                    "es": "Unidad de negocio"
+                    "en": "Units",
+                    "es": "Unidades"
                 },
                 "navURL": "/business-management",
                 "path": "business-management",
