@@ -39,7 +39,7 @@
                 "path": "business-management",
                 "loadChildren": "./main/content/business-management/business-management.module#BusinessManagementModule",
                 "priority": 3000,
-                "roles" : ["SYSADMIN","platform-admin"],
+                "roles" : ["PLATFORM-ADMIN"],
                 "default" : false
             }            
         ],

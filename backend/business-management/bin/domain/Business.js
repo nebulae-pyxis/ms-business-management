@@ -39,7 +39,7 @@ class Business {
       "getBusinessByFilter$",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["SYSADMIN", "platform-admin"]
+      ["PLATFORM-ADMIN"]
       )
       .mergeMap(roles => BusinessDA.getBusinessByFilter$(args.filterText, args.limit))          
       .toArray()
@@ -62,7 +62,7 @@ class Business {
       "getMyBusiness$",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["SYSADMIN", "business-owner", "POS", "platform-admin"]
+      ["BUSINESS-OWNER", "POS", "PLATFORM-ADMIN"]
       )
       .mergeMap(roles => {
         const businessId = authToken.businessId || '';
@@ -90,7 +90,7 @@ class Business {
       "changeBusinessState$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["SYSADMIN", "platform-admin"]
+      ["PLATFORM-ADMIN"]
     )
       .mergeMap(val => {
         return BusinessDA.getBusiness$(args.id);
@@ -114,7 +114,7 @@ class Business {
       "getBusinesses$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["SYSADMIN", "platform-admin"]
+      ["PLATFORM-ADMIN"]
     )
       .mergeMap(val => {
         return BusinessDA.getBusinesses$(
@@ -141,7 +141,7 @@ class Business {
       "getBusinessCount$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["SYSADMIN", "platform-admin"]
+      ["PLATFORM-ADMIN"]
     )
       .mergeMap(val => {
         return BusinessDA.getBusinessCount$();
@@ -184,7 +184,7 @@ class Business {
       "createBusiness$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["SYSADMIN", "platform-admin"]
+      ["PLATFORM-ADMIN"]
     )
       .mergeMap(val => {
         return BusinessDA.findBusinessName$(
@@ -264,7 +264,7 @@ class Business {
       "updateBusinessGeneralInfo$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["SYSADMIN", "platform-admin"]
+      ["PLATFORM-ADMIN"]
     )
       .mergeMap(val => {
         return BusinessDA.findBusinessName$(id, generalInfo.name).mergeMap(
@@ -330,7 +330,7 @@ class Business {
       "updateBusinessAttributes$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["SYSADMIN", "platform-admin"]
+      ["PLATFORM-ADMIN"]
     )
       .mergeMap(val => {
         return eventSourcing.eventStore.emitEvent$(
@@ -380,7 +380,7 @@ class Business {
       "changeBusinessState$()",
       BUSINESS_PERMISSION_DENIED_ERROR_CODE,
       "Permission denied",
-      ["SYSADMIN", "platform-admin"]
+      ["PLATFORM-ADMIN"]
     )
       .mergeMap(val => {
         return eventSourcing.eventStore.emitEvent$(
