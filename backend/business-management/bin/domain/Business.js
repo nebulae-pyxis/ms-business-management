@@ -354,6 +354,7 @@ class Business {
       .catch(err => this.handleError$(err));
   }
 
+  
   /**
    * Updates the business state
    *

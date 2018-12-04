@@ -88,8 +88,7 @@
           <mat-paginator #paginator [length]="tableSize" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
           </mat-paginator>
         </div>
-
-        
+                
         <!-- BUSINESS DETAIL -->
 
         <app-business-detail fxFlex="30" *ngIf="selectedBusiness" businessId="{{selectedBusiness._id}}" businessDetailAction="{{businessDetailAction}}" (businessCreated)="onBusinessCreated($event)" (closeBusinessDetail)="closeBusinessDetail($event)"></app-business-detail>
