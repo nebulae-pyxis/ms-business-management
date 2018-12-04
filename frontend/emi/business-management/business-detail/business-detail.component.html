@@ -80,7 +80,7 @@
 
                 <mat-checkbox class="example-margin" formControlName="active" [(ngModel)]="selectedBusiness.state">{{'BUSINESS.ACTIVE' | translate}}</mat-checkbox>
                               
-                <button mat-button color="accent" *ngIf="!addNewBusiness" [routerLink]="'/user-management/'+selectedBusiness._id">{{'BUSINESS.MANAGE_USER' | translate}}</button>
+                <button mat-button color="accent" *ngIf="!addNewBusiness" [routerLink]="'/user-management/user/'+selectedBusiness._id+'/new'">{{'BUSINESS.MANAGE_USER' | translate}}</button>
           </div>
           
           <div class="mt-16">
