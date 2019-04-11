@@ -1,11 +1,13 @@
-const { CustomError } = require("../../tools/customError");
 const RoleValidator  = require("../../tools/RoleValidator");
 const withFilter = require("graphql-subscriptions").withFilter;
 const PubSub = require("graphql-subscriptions").PubSub;
 const pubsub = new PubSub();
 const broker = require("../../broker/BrokerFactory")();
 const contextName = "Business-Management";
-const Rx = require("rxjs");
+const {handleError$} = require('../../tools/GraphqlResponseTools');
+
+const { of } = require('rxjs');
+const { map, mergeMap, catchError } = require('rxjs/operators');
 
 //Every single error code
 // please use the prefix assigned to this microservice
@@ -13,36 +15,19 @@ const INTERNAL_SERVER_ERROR_CODE = 15001;
 const BUSINESS_PERMISSION_DENIED_ERROR_CODE = 15002;
 
 function getResponseFromBackEnd$(response) {
-  return Rx.Observable.of(response).map(resp => {
-    if (resp.result.code != 200) {
-      const err = new Error();
-      err.name = "Error";
-      err.message = resp.result.error;
-      Error.captureStackTrace(err, "Error");
-      throw err;
-    }
-    return resp.data;
-  });
-}
-
-/**
- * Handles errors
- * @param {*} err
- * @param {*} operationName
- */
-function handleError$(err, methodName) {
-  return Rx.Observable.of(err).map(err => {
-    const exception = { data: null, result: {} };
-    const isCustomError = err instanceof CustomError;
-    if (!isCustomError) {
-      err = new CustomError(err.name, methodName, INTERNAL_SERVER_ERROR_CODE, err.message);
-    }
-    exception.result = {
-      code: err.code,
-      error: { ...err.getContent() }
-    };
-    return exception;
-  });
+  return of(response)
+  .pipe(
+      map(resp => {
+          if (resp.result.code != 200) {
+              const err = new Error();
+              err.name = 'Error';
+              err.message = resp.result.error;
+              Error.captureStackTrace(err, 'Error');
+              throw err;
+          }
+          return resp.data;
+      })
+  );
 }
 
 module.exports = {
@@ -56,18 +41,18 @@ module.exports = {
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
         ["PLATFORM-ADMIN"]
-      )
-        .mergeMap(response => {
+      ).pipe(
+        mergeMap(response => {
           return broker.forwardAndGetReply$(
             "Business",
             "emigateway.graphql.query.getBusinessByFilterText",
             { root, args, jwt: context.encodedToken },
             2000
           );
-        })
-        .catch(err => handleError$(err, "getBusinessByFilterText"))
-        .mergeMap(response => getResponseFromBackEnd$(response))
-        .toPromise();
+        }),
+        catchError(err => handleError$(err, "getBusinessByFilterText")),
+        mergeMap(response => getResponseFromBackEnd$(response))
+      ).toPromise();
     },
     myBusiness(root, args, context) {
       return RoleValidator.checkPermissions$(
@@ -77,18 +62,18 @@ module.exports = {
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
         ["BUSINESS-OWNER", "PLATFORM-ADMIN", "POS"]
-      )
-        .mergeMap(response => {
+      ).pipe(
+        mergeMap(response => {
           return broker.forwardAndGetReply$(
             "Business",
             "emigateway.graphql.query.myBusiness",
             { root, args, jwt: context.encodedToken },
             2000
           );
-        })
-        .catch(err => handleError$(err, "myBusiness"))
-        .mergeMap(response => getResponseFromBackEnd$(response))
-        .toPromise();
+        }),
+        catchError(err => handleError$(err, "myBusiness")),
+        mergeMap(response => getResponseFromBackEnd$(response))
+      ).toPromise();
   },
     getBusiness(root, args, context) {
       return RoleValidator.checkPermissions$(
@@ -98,18 +83,18 @@ module.exports = {
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
         ["PLATFORM-ADMIN"]
-      )
-        .mergeMap(response => {
+      ).pipe(
+        mergeMap(response => {
           return broker.forwardAndGetReply$(
             "Business",
             "emigateway.graphql.query.getBusiness",
             { root, args, jwt: context.encodedToken },
             2000
           );
-        })
-        .catch(err => handleError$(err, "getBusiness"))
-        .mergeMap(response => getResponseFromBackEnd$(response))
-        .toPromise();
+        }),
+        catchError(err => handleError$(err, "getBusiness")),
+        mergeMap(response => getResponseFromBackEnd$(response))
+      ).toPromise();
     },
     getBusinesses(root, args, context) {
       return RoleValidator.checkPermissions$(
@@ -119,18 +104,18 @@ module.exports = {
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
         ["PLATFORM-ADMIN"]
-      )
-        .mergeMap(response => {
+      ).pipe(
+        mergeMap(response => {
           return broker.forwardAndGetReply$(
             "Business",
             "emigateway.graphql.query.getBusinesses",
             { root, args, jwt: context.encodedToken },
             2000
           );
-        })
-        .catch(err => handleError$(err, "getBusinesses"))
-        .mergeMap(response => getResponseFromBackEnd$(response))
-        .toPromise();
+        }),
+        catchError(err => handleError$(err, "getBusinesses")),
+        mergeMap(response => getResponseFromBackEnd$(response))
+      ).toPromise();
     },
     getBusinessCount(root, args, context) {
       return RoleValidator.checkPermissions$(
@@ -140,18 +125,18 @@ module.exports = {
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
         ["PLATFORM-ADMIN"]
-      )
-        .mergeMap(response => {
+      ).pipe(
+        mergeMap(response => {
           return broker.forwardAndGetReply$(
             "Business",
             "emigateway.graphql.query.getBusinessCount",
             { root, args, jwt: context.encodedToken },
             2000
           );
-        })
-        .catch(err => handleError$(err, "getBusinessCount"))
-        .mergeMap(response => getResponseFromBackEnd$(response))
-        .toPromise();
+        }),
+        catchError(err => handleError$(err, "getBusinessCount")),
+        mergeMap(response => getResponseFromBackEnd$(response))
+      ).toPromise();
     }
   },
 
@@ -165,18 +150,18 @@ module.exports = {
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
         ["PLATFORM-ADMIN"]
-      )
-        .mergeMap(response => {
+      ).pipe(
+        mergeMap(response => {
           return context.broker.forwardAndGetReply$(
             "Business",
             "emigateway.graphql.mutation.persistBusiness",
             { root, args, jwt: context.encodedToken },
             2000
           );
-        })
-        .catch(err => handleError$(err, "persistBusiness"))
-        .mergeMap(response => getResponseFromBackEnd$(response))
-        .toPromise();
+        }),
+        catchError(err => handleError$(err, "persistBusiness")),
+        mergeMap(response => getResponseFromBackEnd$(response))
+      ).toPromise();
     },
     updateBusinessGeneralInfo(root, args, context) {
       return RoleValidator.checkPermissions$(
@@ -186,18 +171,18 @@ module.exports = {
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
         ["PLATFORM-ADMIN"]
-      )
-        .mergeMap(response => {
+      ).pipe(
+        mergeMap(response => {
           return context.broker.forwardAndGetReply$(
             "Business",
             "emigateway.graphql.mutation.updateBusinessGeneralInfo",
             { root, args, jwt: context.encodedToken },
             2000
           );
-        })
-        .catch(err => handleError$(err, "updateBusinessGeneralInfo"))
-        .mergeMap(response => getResponseFromBackEnd$(response))
-        .toPromise();
+        }),
+        catchError(err => handleError$(err, "updateBusinessGeneralInfo")),
+        mergeMap(response => getResponseFromBackEnd$(response))
+      ).toPromise();
     },
     updateBusinessAttributes(root, args, context) {
       return RoleValidator.checkPermissions$(
@@ -207,18 +192,18 @@ module.exports = {
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
         ["PLATFORM-ADMIN"]
-      )
-        .mergeMap(response => {
+      ).pipe(
+        mergeMap(response => {
           return context.broker.forwardAndGetReply$(
             "Business",
             "emigateway.graphql.mutation.updateBusinessAttributes",
             { root, args, jwt: context.encodedToken },
             2000
           );
-        })
-        .catch(err => handleError$(err, "updateBusinessAttributes"))
-        .mergeMap(response => getResponseFromBackEnd$(response))
-        .toPromise();
+        }),
+        catchError(err => handleError$(err, "updateBusinessAttributes")),
+        mergeMap(response => getResponseFromBackEnd$(response))
+      ).toPromise();
     },
     updateBusinessState(root, args, context) {
       return RoleValidator.checkPermissions$(
@@ -228,18 +213,18 @@ module.exports = {
         BUSINESS_PERMISSION_DENIED_ERROR_CODE,
         "Permission denied",
         ["PLATFORM-ADMIN"]
-      )
-        .mergeMap(response => {
+      ).pipe(        
+        mergeMap(response => {
           return context.broker.forwardAndGetReply$(
             "Business",
             "emigateway.graphql.mutation.updateBusinessState",
             { root, args, jwt: context.encodedToken },
             2000
           );
-        })
-        .catch(err => handleError$(err, "updateBusinessState"))
-        .mergeMap(response => getResponseFromBackEnd$(response))
-        .toPromise();
+        }),
+        catchError(err => handleError$(err, "updateBusinessState")),
+        mergeMap(response => getResponseFromBackEnd$(response))
+      ).toPromise();
     }
     
   },
